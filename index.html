@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boardly — AI Boarding Assistant for Bus Travel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1a9e3f;
+  --green-light: #e8f5ec;
+  --green-mid: #a8dab5;
+  --green-dark: #0d5c24;
+  --black: #080c09;
+  --off-white: #f7f9f7;
+  --text-muted: #6b7a6e;
+  --border: #d8e8dc;
+  --radius: 16px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #fff;
+  color: var(--black);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ---- NAV ---- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 5%;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(26,158,63,0.1);
+  transition: all 0.3s ease;
+}
+nav.scrolled { padding: 0.9rem 5%; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo img { width: auto; height: 38px; }
+.nav-brand { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; color: var(--black); letter-spacing: -0.02em; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
+.nav-links a { text-decoration: none; color: var(--text-muted); font-size: 0.9rem; font-weight: 400; transition: color 0.2s; }
+.nav-links a:hover { color: var(--green); }
+.nav-cta {
+  background: var(--green); color: #fff;
+  padding: 0.55rem 1.4rem; border-radius: 50px;
+  font-size: 0.88rem; font-weight: 500;
+  transition: all 0.2s; cursor: pointer; border: none;
+}
+.nav-cta:hover { background: var(--green-dark); transform: translateY(-1px); }
+
+/* ---- HERO ---- */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 8rem 5% 5rem;
+  position: relative; overflow: hidden;
+  background: #fff;
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green-light); color: var(--green-dark);
+  padding: 0.4rem 1rem; border-radius: 50px;
+  font-size: 0.82rem; font-weight: 500;
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+}
+.hero-tag-dot { width: 7px; height: 7px; background: var(--green); border-radius: 50%; }
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.8rem, 7vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: center;
+  max-width: 900px;
+  color: var(--black);
+  opacity: 0; animation: fadeUp 0.9s 0.35s ease forwards;
+}
+.hero h1 em { font-style: italic; color: var(--green); }
+
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: var(--text-muted); font-weight: 300;
+  text-align: center; max-width: 580px;
+  margin-top: 1.5rem; line-height: 1.7;
+  opacity: 0; animation: fadeUp 0.9s 0.5s ease forwards;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; justify-content: center;
+  opacity: 0; animation: fadeUp 0.9s 0.65s ease forwards;
+}
+.btn-primary {
+  background: var(--green); color: #fff;
+  padding: 0.85rem 2rem; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 500;
+  border: none; cursor: pointer;
+  transition: all 0.25s; text-decoration: none; display: inline-block;
+}
+.btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); }
+.btn-ghost {
+  background: transparent; color: var(--black);
+  padding: 0.85rem 2rem; border-radius: 50px;
+  font-size: 0.95rem; font-weight: 400;
+  border: 1.5px solid var(--border);
+  cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+
+/* Hero visual — animated bus scene */
+.hero-visual {
+  margin-top: 4.5rem; width: 100%; max-width: 860px;
+  position: relative;
+  opacity: 0; animation: fadeUp 1s 0.8s ease forwards;
+}
+.hero-card {
+  background: var(--off-white); border-radius: 24px;
+  border: 1.5px solid var(--border);
+  padding: 2rem 2.5rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; align-items: center;
+  overflow: hidden; position: relative;
+}
+
+/* Simulated operator call screen */
+.call-scene {
+  display: flex; flex-direction: column; gap: .75rem;
+}
+.call-bubble {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.call-bubble .avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 600;
+}
+.avatar.op { background: #ffe0e0; color: #c0392b; }
+.avatar.ai { background: var(--green-light); color: var(--green-dark); }
+.bubble-msg {
+  background: #fff; border-radius: 12px; border-radius: 4px 12px 12px 12px;
+  padding: 0.6rem 0.9rem; font-size: 0.85rem; line-height: 1.5;
+  border: 1px solid #eee; max-width: 220px;
+}
+.bubble-msg.ai-msg { background: var(--green); color: #fff; border-color: var(--green); border-radius: 12px 4px 12px 12px; }
+
+/* AI visual right side */
+.ai-scene { display: flex; flex-direction: column; gap: 1rem; }
+.ai-title { font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 600; color: var(--black); }
+.stat-row { display: flex; gap: .75rem; }
+.stat-chip {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 12px; padding: 0.7rem 1rem;
+  flex: 1; text-align: center;
+}
+.stat-chip .num { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--green); }
+.stat-chip .stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+.progress-block { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1rem; }
+.progress-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .5rem; font-size: 0.82rem; }
+.progress-row:last-child { margin-bottom: 0; }
+.prog-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.prog-bar { height: 100%; border-radius: 3px; background: var(--green); transition: width 2s ease; }
+.prog-label { font-size: 0.75rem; color: var(--text-muted); min-width: 28px; text-align: right; }
+
+/* ---- PROBLEM ---- */
+.problem { padding: 7rem 5%; background: var(--black); color: #fff; overflow: hidden; }
+.section-eyebrow {
+  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 1.2rem;
+}
+.problem h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3.8rem);
+  font-weight: 600; line-height: 1.1; letter-spacing: -0.02em;
+  max-width: 700px;
+}
+.problem h2 span { color: var(--green-mid); font-style: italic; }
+
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5px; margin-top: 5rem; }
+.prob-card {
+  background: #111; padding: 2.5rem 2rem;
+  transition: background 0.3s;
+}
+.prob-card:hover { background: #161f18; }
+.prob-card:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.prob-card:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.prob-num { font-family: 'Fraunces', serif; font-size: 3.5rem; color: var(--green); font-weight: 700; line-height: 1; margin-bottom: 1rem; }
+.prob-title { font-size: 1.05rem; font-weight: 500; margin-bottom: .6rem; }
+.prob-desc { font-size: 0.9rem; color: #8a9e8e; line-height: 1.65; }
+
+.problem-story {
+  margin-top: 5rem; padding: 3.5rem;
+  background: #0f1a11; border-radius: var(--radius);
+  border: 1px solid #1e3a22;
+  display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; align-items: center;
+}
+.story-quote {
+  font-family: 'Fraunces', serif; font-size: clamp(1.4rem, 3vw, 2.2rem);
+  font-weight: 400; font-style: italic; line-height: 1.4; color: #d8f0de;
+}
+.story-right p { font-size: 0.95rem; color: #8a9e8e; line-height: 1.7; }
+.story-right p + p { margin-top: 1rem; }
+.story-tag { display: inline-block; margin-top: 1.5rem; background: var(--green); color: #fff; font-size: 0.8rem; padding: 0.35rem 1rem; border-radius: 50px; }
+
+/* ---- HOW IT WORKS ---- */
+.how { padding: 7rem 5%; background: #fff; }
+.how h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700; letter-spacing: -0.02em; text-align: center; max-width: 650px;
+  margin: 0 auto 1rem;
+}
+.how-sub { text-align: center; color: var(--text-muted); font-size: 1rem; max-width: 480px; margin: 0 auto 5rem; }
+
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5px; }
+.step {
+  background: var(--off-white); padding: 2.5rem 1.8rem;
+  position: relative; transition: all 0.3s;
+}
+.step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+.step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.step:hover { background: var(--green-light); transform: translateY(-4px); }
+.step-num {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: var(--green); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 700;
+  margin-bottom: 1.2rem;
+}
+.step h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; }
+.step p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+.step-connector {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--green); font-size: 1.4rem; padding-top: 3rem;
+}
+
+/* ---- FEATURES ---- */
+.features { padding: 7rem 5%; background: var(--off-white); }
+.features h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700; letter-spacing: -0.02em; text-align: center; margin-bottom: 1rem;
+}
+.features-sub { text-align: center; color: var(--text-muted); font-size: 1rem; max-width: 500px; margin: 0 auto 4rem; }
+
+.feat-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+}
+.feat-card {
+  background: #fff; padding: 2.5rem 2rem;
+  border-radius: 0; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.feat-grid .feat-card:first-child { border-radius: var(--radius) 0 0 0; }
+.feat-grid .feat-card:nth-child(3) { border-radius: 0 var(--radius) 0 0; }
+.feat-grid .feat-card:nth-child(4) { border-radius: 0 0 0 var(--radius); }
+.feat-grid .feat-card:last-child { border-radius: 0 0 var(--radius) 0; }
+.feat-card:hover { background: var(--green-light); }
+.feat-icon {
+  width: 46px; height: 46px; background: var(--green-light); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.2rem;
+}
+.feat-icon svg { width: 22px; height: 22px; }
+.feat-card h3 { font-size: 1rem; font-weight: 600; margin-bottom: .5rem; }
+.feat-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+.feat-tag { display: inline-block; margin-top: .8rem; font-size: 0.75rem; color: var(--green); font-weight: 500; }
+
+/* ---- BEFORE/AFTER ---- */
+.compare { padding: 7rem 5%; background: var(--black); color: #fff; }
+.compare h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700; letter-spacing: -0.02em; text-align: center; margin-bottom: 4rem;
+}
+.compare h2 span { color: var(--green-mid); }
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.compare-side { border-radius: var(--radius); padding: 2.5rem; }
+.compare-side.before { background: #1a0a0a; border: 1px solid #3a1515; }
+.compare-side.after { background: #0a1a0e; border: 1px solid #1a3a22; }
+.compare-label {
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;
+}
+.compare-label.bad { color: #e88; }
+.compare-label.good { color: var(--green-mid); }
+.compare-dot { width: 8px; height: 8px; border-radius: 50%; }
+.compare-dot.bad { background: #e55; }
+.compare-dot.good { background: var(--green); }
+.compare-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 1.2rem; font-size: 0.9rem; color: #ccc; line-height: 1.5;
+}
+.compare-item .ci-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ---- FOR WHOM ---- */
+.forwhom { padding: 7rem 5%; background: #fff; }
+.forwhom h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700; letter-spacing: -0.02em; text-align: center; margin-bottom: 1rem;
+}
+.forwhom-sub { text-align: center; color: var(--text-muted); max-width: 460px; margin: 0 auto 4rem; font-size: 1rem; }
+.audience-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.aud-card {
+  border: 1.5px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem;
+  transition: all 0.3s; position: relative;
+}
+.aud-card:hover { border-color: var(--green); background: var(--green-light); transform: translateY(-4px); }
+.aud-tag {
+  display: inline-block; background: var(--green-light); color: var(--green-dark);
+  font-size: 0.78rem; font-weight: 600; padding: 0.3rem 0.8rem;
+  border-radius: 50px; margin-bottom: 1.2rem;
+}
+.aud-card h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: .6rem; }
+.aud-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; }
+.aud-list { margin-top: 1.2rem; display: flex; flex-direction: column; gap: .5rem; }
+.aud-list li { font-size: 0.85rem; color: var(--text-muted); padding-left: 1.2rem; position: relative; list-style: none; }
+.aud-list li::before { content: "→"; color: var(--green); position: absolute; left: 0; }
+
+/* ---- STATS TICKER ---- */
+.ticker { background: var(--green); padding: 1.2rem 0; overflow: hidden; }
+.ticker-inner { display: flex; gap: 4rem; animation: ticker 18s linear infinite; white-space: nowrap; }
+.ticker-inner span { color: #fff; font-size: 0.88rem; font-weight: 500; }
+.ticker-inner strong { font-family: 'Fraunces', serif; font-size: 1rem; margin-right: 6px; }
+
+/* ---- CTA ---- */
+.cta-section {
+  padding: 9rem 5%;
+  background: var(--off-white); text-align: center;
+  position: relative; overflow: hidden;
+}
+.cta-section::before {
+  content: '';
+  position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 600px; background: radial-gradient(circle, rgba(26,158,63,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(2.2rem, 6vw, 4.5rem);
+  font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; max-width: 720px; margin: 0 auto 1.5rem;
+}
+.cta-section h2 em { font-style: italic; color: var(--green); }
+.cta-section p { color: var(--text-muted); font-size: 1rem; max-width: 450px; margin: 0 auto 2.5rem; line-height: 1.7; }
+.waitlist-form { display: flex; gap: 0; max-width: 420px; margin: 0 auto; border-radius: 50px; overflow: hidden; border: 2px solid var(--green); background: #fff; }
+.waitlist-form input {
+  flex: 1; padding: 0.85rem 1.4rem; border: none; outline: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.92rem; color: var(--black); background: transparent;
+}
+.waitlist-form button {
+  background: var(--green); color: #fff; border: none;
+  padding: 0.85rem 1.6rem; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+  font-family: 'DM Sans', sans-serif; transition: background 0.2s; border-radius: 0 50px 50px 0;
+}
+.waitlist-form button:hover { background: var(--green-dark); }
+.cta-note { margin-top: 1rem; font-size: 0.8rem; color: #aab3ac; }
+
+/* ---- FOOTER ---- */
+footer { background: var(--black); color: #fff; padding: 4rem 5% 2.5rem; }
+.footer-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 3rem; }
+.footer-logo { display: flex; align-items: center; gap: 10px; }
+.footer-logo img { width: auto; height: 38px; }
+.footer-brand { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: #fff; }
+.footer-tagline { font-size: 0.85rem; color: #5a6b5d; max-width: 320px; line-height: 1.6; }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { text-decoration: none; color: #5a6b5d; font-size: 0.88rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--green); }
+.footer-divider { border: none; border-top: 1px solid #1a2a1e; margin-bottom: 1.5rem; }
+.footer-bottom { display: flex; align-items: center; justify-content: space-between; }
+.footer-bottom p { font-size: 0.82rem; color: #3a4a3d; }
+.footer-made { font-size: 0.82rem; color: #3a4a3d; }
+.footer-made span { color: var(--green); }
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+.hero-tag-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 900px) {
+  .problem-grid { grid-template-columns: 1fr; gap: 2px; }
+  .prob-card:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+  .prob-card:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .step:first-child { border-radius: var(--radius) 0 0 0; }
+  .step:nth-child(2) { border-radius: 0 var(--radius) 0 0; }
+  .step:nth-child(3) { border-radius: 0 0 0 var(--radius); }
+  .step:last-child { border-radius: 0 0 var(--radius) 0; }
+  .feat-grid { grid-template-columns: 1fr 1fr; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .audience-grid { grid-template-columns: 1fr; }
+  .hero-card { grid-template-columns: 1fr; }
+  .problem-story { grid-template-columns: 1fr; }
+  .footer-top { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+  nav .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  .feat-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+  .feat-grid .feat-card { border-radius: 0; }
+  .feat-grid .feat-card:first-child { border-radius: var(--radius) var(--radius) 0 0; }
+  .feat-grid .feat-card:last-child { border-radius: 0 0 var(--radius) var(--radius); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">
+    <img src="logo.svg" alt="Boardly Logo" />
+    <span class="nav-brand">Boardly</span>
+  </a>
+  <div class="nav-links">
+    <a href="#problem">Problem</a>
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#waitlist">For operators</a>
+  </div>
+  <button class="nav-cta" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get early access</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">
+    <span class="hero-tag-dot"></span>
+    AI-powered passenger communication for bus travel
+  </div>
+  <h1>Stop the panic calls.<br><em>Start smart boarding.</em></h1>
+  <p class="hero-sub">Boardly replaces repeated, stressful operator calls with a calm AI that notifies passengers, listens to their responses, and keeps everyone informed — automatically.</p>
+  <div class="hero-actions">
+    <a href="#waitlist" class="btn-primary">Request early access</a>
+    <a href="#how" class="btn-ghost">See how it works</a>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card">
+      <div class="call-scene">
+        <p style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem">Without Boardly</p>
+        <div class="call-bubble">
+          <div class="avatar op">OP</div>
+          <div class="bubble-msg">Sir where are you?? Bus is here!! Come fast!!</div>
+        </div>
+        <div class="call-bubble" style="justify-content:flex-end">
+          <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5">I'm coming, 5 more minutes...</div>
+        </div>
+        <div class="call-bubble">
+          <div class="avatar op">OP</div>
+          <div class="bubble-msg" style="border-color:#ffcccc">NO!! Come NOW!! We are leaving!!</div>
+        </div>
+        <div style="font-size:0.78rem;color:#c0392b;margin-top:.5rem;padding-left:42px">😤 Argument at boarding point</div>
+      </div>
+      <div class="ai-scene">
+        <p style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)">With Boardly</p>
+        <div class="call-bubble">
+          <div class="avatar ai">AI</div>
+          <div class="bubble-msg ai-msg">Hi Rahul, your bus departs in 30 min. Are you on the way?</div>
+        </div>
+        <div class="call-bubble" style="justify-content:flex-end">
+          <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5">Yes, heading there. Where is the bus now?</div>
+        </div>
+        <div class="call-bubble">
+          <div class="avatar ai">AI</div>
+          <div class="bubble-msg ai-msg">Bus just crossed Silk Board. Arrives in ~8 mins. You're all set!</div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--green);margin-top:.5rem;padding-left:42px">✓ Passenger confirmed · Operator notified</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span><strong>38%</strong> of bus delays involve late boarding</span>
+    <span>✦</span>
+    <span><strong>50+ calls</strong> per operator per departure</span>
+    <span>✦</span>
+    <span><strong>₹0</strong> spent on solving this by any major platform</span>
+    <span>✦</span>
+    <span><strong>Zero</strong> apps currently offer AI call interaction for bus travel</span>
+    <span>✦</span>
+    <span><strong>38%</strong> of bus delays involve late boarding</span>
+    <span>✦</span>
+    <span><strong>50+ calls</strong> per operator per departure</span>
+    <span>✦</span>
+    <span><strong>₹0</strong> spent on solving this by any major platform</span>
+    <span>✦</span>
+    <span><strong>Zero</strong> apps currently offer AI call interaction for bus travel</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="section-eyebrow reveal">The problem</div>
+  <h2 class="reveal">Every departure starts with<span> chaos</span></h2>
+  <p style="color:#6a8a6e;max-width:580px;margin-top:1rem;font-size:1rem;line-height:1.7" class="reveal reveal-delay-1">Millions of bus trips across India every day. And before every single one, the same broken ritual plays out.</p>
+
+  <div class="problem-grid" style="margin-top:4rem">
+    <div class="prob-card reveal">
+      <div class="prob-num">01</div>
+      <div class="prob-title">The operator has to call everyone</div>
+      <div class="prob-desc">One person. 30–50 passengers. Called 2–3 times each. That's over 100 manual calls before a single bus departs — while also managing the route, timing, and vehicle.</div>
+    </div>
+    <div class="prob-card reveal reveal-delay-1">
+      <div class="prob-num">02</div>
+      <div class="prob-title">Passengers get panic-called</div>
+      <div class="prob-desc">"Come fast, come fast." Every few minutes. No information about where the bus is. Just repeated pressure. Frustrating, dehumanizing — and sometimes leads to real arguments.</div>
+    </div>
+    <div class="prob-card reveal reveal-delay-2">
+      <div class="prob-num">03</div>
+      <div class="prob-title">Apps haven't solved it</div>
+      <div class="prob-desc">RedBus sends an SMS. AbhiBus shows a tracking link. But notifications don't interact. Operators still call manually. The gap is 100% unsolved by every major platform.</div>
+    </div>
+  </div>
+
+  <div class="problem-story reveal" style="margin-top:3rem">
+    <div class="story-quote">"The operator was calling every minute. My father got so irritated, they ended up arguing at the boarding point."</div>
+    <div class="story-right">
+      <p>This isn't an edge case. It's the standard experience for hundreds of millions of bus passengers across India every year.</p>
+      <p>The problem isn't laziness or bad intentions. It's a communication gap that no technology has bothered to fill — until now.</p>
+      <span class="story-tag">This is exactly what Boardly fixes</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-eyebrow reveal" style="text-align:center">How it works</div>
+  <h2 class="reveal">Four steps. Zero manual calls.</h2>
+  <p class="how-sub reveal reveal-delay-1">Boardly runs automatically from the moment a journey is scheduled — no driver input needed.</p>
+
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-num">1</div>
+      <h3>Journey scheduled</h3>
+      <p>Operator creates a trip or imports from their existing platform. Boardly automatically picks up the departure time and passenger list.</p>
+    </div>
+    <div class="step reveal reveal-delay-1">
+      <div class="step-num">2</div>
+      <h3>AI calls at the right time</h3>
+      <p>30 minutes before departure, Boardly calls each passenger by name. Calm, professional, personalized — in their preferred language.</p>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-num">3</div>
+      <h3>Listens and understands</h3>
+      <p>"I'm on my way" → confirmed. "I'll be 10 minutes late" → flagged. "Where's the bus?" → live GPS response. Real conversation, not a robocall.</p>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-num">4</div>
+      <h3>Operator sees everything</h3>
+      <p>Real-time dashboard shows exactly who's confirmed, delayed, or unreachable — before the operator needs to pick up the phone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-eyebrow reveal" style="text-align:center">Features</div>
+  <h2 class="reveal">Not a notification system.<br>A conversation engine.</h2>
+  <p class="features-sub reveal reveal-delay-1">Every feature is designed around one goal: zero manual calls before boarding.</p>
+
+  <div class="feat-grid">
+    <div class="feat-card reveal">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a9e3f" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z"/></svg>
+      </div>
+      <h3>AI outbound calling</h3>
+      <p>Automatically dials every passenger at 30 and 15 minutes before departure. No scheduling, no triggers — fully autonomous.</p>
+      <span class="feat-tag">Core feature</span>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a9e3f" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </div>
+      <h3>Intent detection</h3>
+      <p>AI understands what passengers say — "I'm coming", "I'll be late", "cancel my seat" — and takes action accordingly, automatically.</p>
+      <span class="feat-tag">Powered by Groq AI</span>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a9e3f" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3>Live GPS in voice</h3>
+      <p>"Where is my bus?" → AI fetches real-time location and responds naturally: "Your bus just crossed Silk Board and will arrive in 6 minutes."</p>
+      <span class="feat-tag">Real-time data</span>
+    </div>
+    <div class="feat-card reveal">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a9e3f" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3>Operator dashboard</h3>
+      <p>Live view of every passenger's status: confirmed, delayed, unreachable. Updated in real-time as calls happen. No refreshing needed.</p>
+      <span class="feat-tag">Real-time sync</span>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a9e3f" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <h3>SMS fallback</h3>
+      <p>Call failed? Voicemail? Boardly automatically sends a concise SMS with all boarding details. 100% delivery guarantee.</p>
+      <span class="feat-tag">Zero missed passengers</span>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a9e3f" stroke-width="2" stroke-linecap="round"><path d="M5 3l14 9-14 9V3z"/></svg>
+      </div>
+      <h3>10+ Indian languages</h3>
+      <p>Hindi, Tamil, Telugu, Kannada, Marathi and more. Passenger's language is auto-detected from their booking — no setup required.</p>
+      <span class="feat-tag">India-native</span>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="compare" id="compare">
+  <div class="section-eyebrow reveal" style="text-align:center;color:var(--green-mid)">The difference</div>
+  <h2 class="reveal">Before Boardly. <span>After Boardly.</span></h2>
+  <div class="compare-grid">
+    <div class="compare-side before reveal">
+      <div class="compare-label bad"><span class="compare-dot bad"></span>Without Boardly</div>
+      <div class="compare-item"><span class="ci-icon">📞</span> Operator manually calls 30–50 passengers, multiple times each</div>
+      <div class="compare-item"><span class="ci-icon">😡</span> Passengers receive panic calls with zero useful information</div>
+      <div class="compare-item"><span class="ci-icon">❓</span> No one knows where the bus actually is unless they call the operator</div>
+      <div class="compare-item"><span class="ci-icon">⏰</span> Delays caused by operators too busy calling to manage the trip</div>
+      <div class="compare-item"><span class="ci-icon">⚡</span> Conflicts, raised voices, arguments at boarding points</div>
+      <div class="compare-item"><span class="ci-icon">📊</span> Zero data on who's coming, who's late, who cancelled</div>
+    </div>
+    <div class="compare-side after reveal reveal-delay-2">
+      <div class="compare-label good"><span class="compare-dot good"></span>With Boardly</div>
+      <div class="compare-item"><span class="ci-icon">🤖</span> AI calls every passenger automatically — operator does nothing</div>
+      <div class="compare-item"><span class="ci-icon">😌</span> Passengers receive calm, informative calls with real boarding details</div>
+      <div class="compare-item"><span class="ci-icon">📍</span> Live GPS location delivered in natural language, any time</div>
+      <div class="compare-item"><span class="ci-icon">⚡</span> Operator focuses on driving — dashboard shows status live</div>
+      <div class="compare-item"><span class="ci-icon">✅</span> Zero conflict — AI doesn't raise its voice, ever</div>
+      <div class="compare-item"><span class="ci-icon">📊</span> Full audit trail of every call, response, and passenger intent</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHOM -->
+<section class="forwhom">
+  <div class="section-eyebrow reveal" style="text-align:center">Who it's for</div>
+  <h2 class="reveal">Built for every layer of bus travel</h2>
+  <p class="forwhom-sub reveal reveal-delay-1">Whether you run 5 buses or 5,000, Boardly fits your operation.</p>
+  <div class="audience-grid">
+    <div class="aud-card reveal">
+      <span class="aud-tag">Bus operators</span>
+      <h3>Private & fleet operators</h3>
+      <p>Stop spending 45 minutes before every departure on the phone. Let Boardly handle all passenger communication while you focus on the road.</p>
+      <ul class="aud-list">
+        <li>VRL, SRS, Parveen Travels</li>
+        <li>Private intercity operators</li>
+        <li>Corporate shuttle operators</li>
+      </ul>
+    </div>
+    <div class="aud-card reveal reveal-delay-1">
+      <span class="aud-tag">Travel platforms</span>
+      <h3>Booking & aggregator platforms</h3>
+      <p>Embed Boardly as a white-labeled feature. Your brand voice. Your caller ID. Give your listed operators a premium communication layer they can't get elsewhere.</p>
+      <ul class="aud-list">
+        <li>RedBus, AbhiBus, Cleartrip</li>
+        <li>State RTC booking portals</li>
+        <li>Travel aggregator platforms</li>
+      </ul>
+    </div>
+    <div class="aud-card reveal reveal-delay-2">
+      <span class="aud-tag">AI platforms</span>
+      <h3>Conversational AI companies</h3>
+      <p>A ready-made vertical for any AI calling platform. Bus travel is one of the highest-frequency use cases in India — and completely unsolved by existing players.</p>
+      <ul class="aud-list">
+        <li>Equal AI and similar platforms</li>
+        <li>Enterprise voice AI vendors</li>
+        <li>Travel tech infrastructure</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="waitlist">
+  <div class="section-eyebrow reveal" style="text-align:center">Early access</div>
+  <h2 class="reveal">Ready to end the <em>panic calls?</em></h2>
+  <p class="reveal reveal-delay-1">Join operators and platforms who are already waiting for Boardly. We're onboarding our first pilot partners now.</p>
+  <div class="waitlist-form reveal reveal-delay-2">
+    <input type="email" id="email-input" placeholder="your@company.com">
+    <button onclick="handleWaitlist()">Join waitlist</button>
+  </div>
+  <p class="cta-note reveal reveal-delay-3" id="waitlist-note">No credit card. No commitment. First 10 operators get free setup.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">
+        <img src="logo.svg" alt="Boardly Logo" />
+        <span class="footer-brand">Boardly</span>
+      </div>
+      <p class="footer-tagline" style="margin-top:.75rem">AI passenger notification infrastructure for bus travel. No more panic calls. No more conflicts. Just smooth boarding.</p>
+    </div>
+    <div>
+      <div class="footer-links">
+        <a href="#problem">Problem</a>
+        <a href="#how">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#waitlist">Get access</a>
+      </div>
+    </div>
+  </div>
+  <hr class="footer-divider">
+  <div class="footer-bottom">
+    <p>© 2025 Boardly. All rights reserved.</p>
+    <p class="footer-made">Made with <span>♥</span> in Bengaluru, India</p>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Progress bars animate on scroll
+const progObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.prog-bar').forEach(bar => {
+        bar.style.width = bar.dataset.width || bar.style.width;
+      });
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.progress-block').forEach(el => progObserver.observe(el));
+
+// Waitlist
+function handleWaitlist() {
+  const input = document.getElementById('email-input');
+  const note = document.getElementById('waitlist-note');
+  if (!input.value || !input.value.includes('@')) {
+    input.style.outline = '2px solid #e55';
+    setTimeout(() => input.style.outline = '', 1500);
+    return;
+  }
+  note.textContent = '🎉 You\'re on the list! We\'ll be in touch soon.';
+  note.style.color = 'var(--green)';
+  input.value = '';
+}
+
+// Smooth counter animation for stat numbers
+function animateCounter(el, target, suffix) {
+  let current = 0;
+  const increment = target / 40;
+  const timer = setInterval(() => {
+    current = Math.min(current + increment, target);
+    el.textContent = Math.round(current) + suffix;
+    if (current >= target) clearInterval(timer);
+  }, 40);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<svg viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .fill-green { fill: #1a9e3f; }
+      .fill-white { fill: #ffffff; }
+    </style>
+  </defs>
+
+  <!-- Cargo (6 large circles) -->
+  <circle cx="45" cy="25" r="12" class="fill-green"/>
+  <circle cx="45" cy="48" r="12" class="fill-green"/>
+  <circle cx="68" cy="25" r="12" class="fill-green"/>
+  <circle cx="68" cy="48" r="12" class="fill-green"/>
+  <circle cx="91" cy="25" r="12" class="fill-green"/>
+  <circle cx="91" cy="48" r="12" class="fill-green"/>
+
+  <!-- Back Tail Piece -->
+  <path d="M 33 34 C 20 34 18 42 18 52 C 18 58 22 60 28 60 L 33 60 Z" class="fill-green"/>
+  <rect x="20" y="50" width="4" height="2" rx="1" class="fill-white"/>
+
+  <!-- Front Cabin -->
+  <path d="M 103 15 C 114 15 116 22 116 34 L 116 57 C 116 59 114 60 112 60 L 103 60 Z" class="fill-green"/>
+  <!-- Window -->
+  <path d="M 105 22 C 110 22 112 26 112 32 L 112 38 L 105 38 Z" class="fill-white"/>
+  <!-- Front Light -->
+  <rect x="110" y="50" width="4" height="2" rx="1" class="fill-white"/>
+
+  <!-- Wheels -->
+  <!-- Left Wheel -->
+  <circle cx="38" cy="60" r="7" class="fill-white"/>
+  <circle cx="38" cy="60" r="5" class="fill-green"/>
+  <circle cx="38" cy="60" r="3" class="fill-white"/>
+  
+  <!-- Right Wheel -->
+  <circle cx="85" cy="60" r="7" class="fill-white"/>
+  <circle cx="85" cy="60" r="5" class="fill-green"/>
+  <circle cx="85" cy="60" r="3" class="fill-white"/>
+</svg>
