@@ -12,14 +12,17 @@
   <style>
     :root {
       --green: #1a9e3f;
-      --green-light: #e8f5ec;
+      --green-light: rgba(232, 245, 236, 0.4);
       --green-mid: #a8dab5;
       --green-dark: #0d5c24;
       --black: #080c09;
       --off-white: #f7f9f7;
       --text-muted: #6b7a6e;
-      --border: #d8e8dc;
-      --radius: 16px;
+      --border: rgba(216, 232, 220, 0.5);
+      --radius: 20px;
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
     }
 
     *,
@@ -45,22 +48,27 @@
     /* ---- NAV ---- */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 15px;
+      left: 5%;
+      right: 5%;
       z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.2rem 5%;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(26, 158, 63, 0.1);
-      transition: all 0.3s ease;
+      padding: 0.8rem 2rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 100px;
+      box-shadow: var(--shadow-soft);
+      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     nav.scrolled {
-      padding: 0.9rem 5%;
+      top: 10px;
+      padding: 0.6rem 2rem;
+      background: rgba(255, 255, 255, 0.85);
     }
 
     .nav-logo {
@@ -242,16 +250,19 @@
     }
 
     .hero-card {
-      background: var(--off-white);
-      border-radius: 24px;
-      border: 1.5px solid var(--border);
-      padding: 2rem 2.5rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 32px;
+      border: 1px solid var(--glass-border);
+      padding: 3rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 3rem;
       align-items: center;
       overflow: hidden;
       position: relative;
+      box-shadow: var(--shadow-soft);
     }
 
     /* Simulated operator call screen */
@@ -428,13 +439,17 @@
     }
 
     .prob-card {
-      background: #111;
+      background: rgba(22, 31, 24, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       padding: 2.5rem 2rem;
-      transition: background 0.3s;
+      transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .prob-card:hover {
-      background: #161f18;
+      background: rgba(26, 158, 63, 0.1);
+      transform: translateY(-5px);
     }
 
     .prob-card:first-child {
@@ -538,10 +553,13 @@
     }
 
     .step {
-      background: var(--off-white);
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
       padding: 2.5rem 1.8rem;
       position: relative;
-      transition: all 0.3s;
+      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
     }
 
     .step:first-child {
@@ -623,10 +641,13 @@
     }
 
     .feat-card {
-      background: #fff;
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
       padding: 2.5rem 2rem;
       border-radius: 0;
-      transition: all 0.3s;
+      transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
       position: relative;
       overflow: hidden;
     }
@@ -715,17 +736,32 @@
 
     .compare-side {
       border-radius: var(--radius);
-      padding: 2.5rem;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .compare-side:hover {
+      transform: translateY(-8px);
     }
 
     .compare-side.before {
-      background: #1a0a0a;
-      border: 1px solid #3a1515;
+      background: linear-gradient(145deg, #160808 0%, #0a0404 100%);
+      border: 1px solid #2a1010;
     }
 
     .compare-side.after {
-      background: #0a1a0e;
-      border: 1px solid #1a3a22;
+      background: linear-gradient(145deg, #091c10 0%, #040d07 100%);
+      border: 1px solid #14321d;
+    }
+
+    .compare-side.before:hover {
+      box-shadow: 0 20px 40px rgba(229, 85, 85, 0.08);
+    }
+
+    .compare-side.after:hover {
+      box-shadow: 0 20px 40px rgba(26, 158, 63, 0.12);
     }
 
     .compare-label {
@@ -733,7 +769,7 @@
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -755,26 +791,66 @@
 
     .compare-dot.bad {
       background: #e55;
+      box-shadow: 0 0 10px rgba(238, 85, 85, 0.4);
     }
 
     .compare-dot.good {
       background: var(--green);
+      box-shadow: 0 0 10px rgba(26, 158, 63, 0.4);
     }
 
     .compare-item {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 16px;
       margin-bottom: 1.2rem;
-      font-size: 0.9rem;
-      color: #ccc;
-      line-height: 1.5;
+      font-size: 0.95rem;
+      color: #b0b8b2;
+      line-height: 1.6;
+      padding: 1rem 1.2rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
     }
 
-    .compare-item .ci-icon {
-      font-size: 1.1rem;
+    .compare-side.before .compare-item:hover {
+      background: rgba(229, 85, 85, 0.06);
+      border-color: rgba(229, 85, 85, 0.15);
+      transform: translateX(6px);
+      color: #e8caca;
+    }
+
+    .compare-side.after .compare-item:hover {
+      background: rgba(26, 158, 63, 0.08);
+      border-color: rgba(26, 158, 63, 0.25);
+      transform: translateX(6px);
+      color: #d8f0de;
+    }
+
+    .ci-indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-top: 8px;
       flex-shrink: 0;
-      margin-top: 1px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .compare-side.before .ci-indicator {
+      background: #e55;
+      opacity: 0.5;
+    }
+
+    .compare-side.after .ci-indicator {
+      background: var(--green);
+      opacity: 0.7;
+    }
+
+    .compare-item:hover .ci-indicator {
+      transform: scale(1.5);
+      opacity: 1;
     }
 
     /* ---- FOR WHOM ---- */
@@ -942,8 +1018,11 @@
       margin: 0 auto;
       border-radius: 50px;
       overflow: hidden;
-      border: 2px solid var(--green);
-      background: #fff;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-soft);
     }
 
     .waitlist-form input {
@@ -1058,10 +1137,13 @@
     }
 
     .contact-form {
-      background: var(--off-white);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       padding: 3rem;
-      border-radius: 24px;
-      border: 1px solid var(--border);
+      border-radius: 32px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-soft);
     }
 
     .form-row {
@@ -1357,9 +1439,59 @@
       }
     }
   </style>
+  <style>
+    /* ---- LIQUID GLASS EFFECTS ---- */
+    .fluid-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      background: #fff;
+      overflow: hidden;
+      filter: contrast(18) brightness(1.1); /* Distortion effect container */
+    }
+
+    .liquid-blob {
+      position: absolute;
+      width: 45vw;
+      height: 45vw;
+      background: var(--green);
+      filter: blur(50px);
+      border-radius: 50%;
+      animation: drift 25s infinite alternate ease-in-out;
+      pointer-events: none;
+      opacity: 0.15;
+    }
+
+    .blob-1 { top: -10%; left: -10%; }
+    .blob-2 { bottom: -10%; right: -10%; animation-duration: 35s; animation-delay: -5s; }
+    .blob-3 { top: 40%; left: 30%; background: radial-gradient(circle, rgba(168, 218, 181, 0.12) 0%, rgba(255, 255, 255, 0) 70%); animation-duration: 30s; }
+
+    @keyframes drift {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      33% { transform: translate(10vw, 5vh) scale(1.1) rotate(10deg); }
+      66% { transform: translate(-5vw, 15vh) scale(0.9) rotate(-10deg); }
+      100% { transform: translate(5vw, -5vh) scale(1.05) rotate(5deg); }
+    }
+
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-soft);
+    }
+  </style>
 </head>
 
 <body>
+  <div class="fluid-bg">
+    <div class="liquid-blob blob-1"></div>
+    <div class="liquid-blob blob-2"></div>
+    <div class="liquid-blob blob-3"></div>
+  </div>
 
   <!-- NAV -->
   <nav id="navbar">
@@ -1622,31 +1754,40 @@
     <div class="compare-grid">
       <div class="compare-side before reveal">
         <div class="compare-label bad"><span class="compare-dot bad"></span>Without Boardly</div>
-        <div class="compare-item"><span class="ci-icon">📞</span> Operator manually calls 30–50 passengers, multiple
+        <div class="compare-item"><span class="ci-indicator"></span> Operator manually calls 30–50 passengers, multiple
           times each</div>
-        <div class="compare-item"><span class="ci-icon">😡</span> Passengers receive panic calls with zero useful
+        <div class="compare-item"><span class="ci-indicator"></span> Passengers receive panic calls with zero useful
           information</div>
-        <div class="compare-item"><span class="ci-icon">❓</span> No one knows where the bus actually is unless they call
+        <div class="compare-item"><span class="ci-indicator"></span> No one knows where the bus actually is unless they
+          call
           the operator</div>
-        <div class="compare-item"><span class="ci-icon">⏰</span> Delays caused by operators too busy calling to manage
+        <div class="compare-item"><span class="ci-indicator"></span> Delays caused by operators too busy calling to
+          manage
           the trip</div>
-        <div class="compare-item"><span class="ci-icon">⚡</span> Conflicts, raised voices, arguments at boarding points
+        <div class="compare-item"><span class="ci-indicator"></span> Conflicts, raised voices, arguments at boarding
+          points
         </div>
-        <div class="compare-item"><span class="ci-icon">📊</span> Zero data on who's coming, who's late, who cancelled
+        <div class="compare-item"><span class="ci-indicator"></span> Zero data on who's coming, who's late, who
+          cancelled
         </div>
       </div>
       <div class="compare-side after reveal reveal-delay-2">
         <div class="compare-label good"><span class="compare-dot good"></span>With Boardly</div>
-        <div class="compare-item"><span class="ci-icon">🤖</span> AI calls every passenger automatically — operator does
+        <div class="compare-item"><span class="ci-indicator"></span> AI calls every passenger automatically — operator
+          does
           nothing</div>
-        <div class="compare-item"><span class="ci-icon">😌</span> Passengers receive calm, informative calls with real
+        <div class="compare-item"><span class="ci-indicator"></span> Passengers receive calm, informative calls with
+          real
           boarding details</div>
-        <div class="compare-item"><span class="ci-icon">📍</span> Live GPS location delivered in natural language, any
+        <div class="compare-item"><span class="ci-indicator"></span> Live GPS location delivered in natural language,
+          any
           time</div>
-        <div class="compare-item"><span class="ci-icon">⚡</span> Operator focuses on driving — dashboard shows status
+        <div class="compare-item"><span class="ci-indicator"></span> Operator focuses on driving — dashboard shows
+          status
           live</div>
-        <div class="compare-item"><span class="ci-icon">✅</span> Zero conflict — AI doesn't raise its voice, ever</div>
-        <div class="compare-item"><span class="ci-icon">📊</span> Full audit trail of every call, response, and
+        <div class="compare-item"><span class="ci-indicator"></span> Zero conflict — AI doesn't raise its voice, ever
+        </div>
+        <div class="compare-item"><span class="ci-indicator"></span> Full audit trail of every call, response, and
           passenger intent</div>
       </div>
     </div>
