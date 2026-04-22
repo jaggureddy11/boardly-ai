@@ -796,5 +796,237 @@ function animateCounter(el, target, suffix) {
   }, 40);
 }
 </script>
+
+<!-- CANVAS ANIMATIONS -->
+<script>
+(function() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return;
+
+  function initCanvas(selector, setupFn, drawFn) {
+    const section = document.querySelector(selector);
+    if (!section) return;
+
+    section.style.position = 'relative';
+    section.style.overflow = 'hidden';
+
+    Array.from(section.children).forEach(child => {
+      if (child.tagName !== 'CANVAS' && child.tagName !== 'STYLE' && child.tagName !== 'SCRIPT') {
+        const comp = window.getComputedStyle(child);
+        if (comp.position === 'static') {
+          child.style.position = 'relative';
+        }
+        child.style.zIndex = '1';
+      }
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '0';
+    section.insertBefore(canvas, section.firstChild);
+
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    const state = setupFn ? setupFn() : {};
+
+    function resize() {
+      const rect = section.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(section);
+    resize();
+
+    function animate(time) {
+      ctx.clearRect(0, 0, w, h);
+      if (drawFn) drawFn(ctx, w, h, time, state);
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // 1. HERO - Bus
+  initCanvas('.hero', 
+    () => ({}),
+    (ctx, w, h, time) => {
+      const duration = 22000;
+      const p = (time % duration) / duration;
+      const bw = 110, bh = 52;
+      const startX = w + bw, endX = -bw;
+      const x = startX + (endX - startX) * p;
+      const baseY = h - 120; // Road position
+
+      // Buildings
+      ctx.fillStyle = 'rgba(13, 92, 36, 0.04)';
+      ctx.fillRect(w * 0.15, baseY - 140, 90, 140);
+      ctx.fillRect(w * 0.15 + 30, baseY - 160, 40, 20);
+      ctx.fillRect(w * 0.5, baseY - 100, 120, 100);
+      ctx.fillRect(w * 0.75, baseY - 180, 80, 180);
+
+      // Road dashed line
+      ctx.beginPath();
+      ctx.moveTo(0, baseY);
+      ctx.lineTo(w, baseY);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([15, 15]);
+      ctx.lineDashOffset = -(time / 20) % 30;
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Bus
+      const bob = Math.sin(time / 200) * 2;
+      const by = baseY - bh - 8 + bob;
+
+      ctx.save();
+      ctx.translate(x, by);
+
+      // Body
+      ctx.fillStyle = '#1a9e3f';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, bw, bh, 10);
+      ctx.fill();
+
+      // Windows
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      const winW = 16, winH = 18, winY = 10;
+      for (let i=0; i<4; i++) {
+        const wx = 28 + i * 20;
+        ctx.beginPath();
+        ctx.roundRect(wx, winY, winW, winH, 3);
+        ctx.fill();
+
+        // Passenger silhouette
+        ctx.fillStyle = 'rgba(26, 158, 63, 0.6)';
+        ctx.beginPath();
+        ctx.arc(wx + winW/2, winY + winH - 5, 4, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+      }
+
+      // Front windshield (bus moves right to left, front is left)
+      ctx.beginPath();
+      ctx.roundRect(8, winY, 14, winH, [4, 2, 2, 4]);
+      ctx.fill();
+
+      // Wheels
+      ctx.fillStyle = '#080c09';
+      ctx.beginPath(); ctx.arc(24, bh, 8, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(bw - 24, bh, 8, 0, Math.PI*2); ctx.fill();
+
+      // Wheel hubs
+      ctx.fillStyle = '#f7f9f7';
+      ctx.beginPath(); ctx.arc(24, bh, 3, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(bw - 24, bh, 3, 0, Math.PI*2); ctx.fill();
+
+      ctx.restore();
+    }
+  );
+
+  // 2. PROBLEM - Phone calls
+  initCanvas('.problem',
+    () => {
+      const p = [];
+      for(let i=0; i<10; i++) p.push({ x: Math.random(), offset: Math.random(), speed: 8000 + Math.random()*6000, op: 0.04 + Math.random()*0.08 });
+      return { p };
+    },
+    (ctx, w, h, time, state) => {
+      state.p.forEach(ph => {
+        const prog = ((time + ph.offset * ph.speed) % ph.speed) / ph.speed;
+        const y = h + 40 - prog * (h + 80);
+        const x = ph.x * w;
+        let op = ph.op;
+        if(prog < 0.1) op *= prog / 0.1; 
+        if(prog > 0.8) op *= (1 - prog) / 0.2; 
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.fillStyle = `rgba(255, 255, 255, ${op})`;
+        ctx.beginPath(); ctx.roundRect(-9, -15, 18, 30, 3); ctx.fill();
+        ctx.fillStyle = `rgba(0, 0, 0, ${op * 0.8})`;
+        ctx.fillRect(-7, -11, 14, 22);
+        ctx.fillStyle = `rgba(255, 255, 255, ${op})`;
+        ctx.fillRect(-3, -13, 6, 1);
+        ctx.beginPath(); ctx.arc(0, 13, 1.5, 0, Math.PI*2); ctx.fill();
+        ctx.restore();
+      });
+    }
+  );
+
+  // 3. FEATURES - Rings
+  initCanvas('.features', 
+    () => ({}),
+    (ctx, w, h, time) => {
+      const cx = w / 2;
+      const cy = h;
+      const cycle = 4500;
+      for (let i=0; i<3; i++) {
+        const p = ((time + i * 1500) % cycle) / cycle;
+        const r = p * 400;
+        const alpha = 0.08 * (1 - p);
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(26, 158, 63, ${alpha})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+  );
+
+  // 4. CTA - Particles
+  initCanvas('.cta-section',
+    () => {
+      const p = [];
+      for(let i=0; i<60; i++) p.push({ x: Math.random(), y: Math.random(), vx: (Math.random()-0.5), vy: (Math.random()-0.5), r: 1.5 + Math.random() });
+      return { p };
+    },
+    (ctx, w, h, time, state) => {
+      state.p.forEach(pt => {
+        pt.x += (pt.vx * 0.5) / w;
+        pt.y += (pt.vy * 0.5) / h;
+        if(pt.x < 0 || pt.x > 1) pt.vx *= -1;
+        if(pt.y < 0 || pt.y > 1) pt.vy *= -1;
+      });
+
+      ctx.lineWidth = 1;
+      for(let i=0; i<state.p.length; i++) {
+        for(let j=i+1; j<state.p.length; j++) {
+          const p1 = state.p[i], p2 = state.p[j];
+          const px1 = p1.x * w, py1 = p1.y * h;
+          const px2 = p2.x * w, py2 = p2.y * h;
+          const distSq = (px1-px2)**2 + (py1-py2)**2;
+          if(distSq < 6400) { 
+            const alpha = 0.06 * (1 - Math.sqrt(distSq)/80);
+            ctx.beginPath();
+            ctx.moveTo(px1, py1);
+            ctx.lineTo(px2, py2);
+            ctx.strokeStyle = `rgba(26, 158, 63, ${alpha})`;
+            ctx.stroke();
+          }
+        }
+      }
+
+      ctx.fillStyle = 'rgba(26, 158, 63, 0.15)';
+      state.p.forEach(pt => {
+        ctx.beginPath();
+        ctx.arc(pt.x * w, pt.y * h, pt.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+  );
+
+})();
+</script>
 </body>
 </html>
