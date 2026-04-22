@@ -249,27 +249,98 @@
       animation: fadeUp 1s 0.8s ease forwards;
     }
 
+    .avatar.ai {
+      background: var(--green-light);
+      color: var(--green-dark);
+    }
+
+    /* ---- COMPARISON GRID ---- */
     .hero-card {
       background: var(--glass-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      border-radius: 32px;
+      border-radius: 40px;
       border: 1px solid var(--glass-border);
-      padding: 3rem;
+      padding: 4rem 3rem;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr auto 1.1fr;
       gap: 3rem;
       align-items: center;
-      overflow: hidden;
       position: relative;
       box-shadow: var(--shadow-soft);
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
-    /* Simulated operator call screen */
-    .call-scene {
+    .comparison-panel {
       display: flex;
       flex-direction: column;
-      gap: .75rem;
+      gap: 1.5rem;
+    }
+
+    .panel-header {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.5rem;
+    }
+
+    .panel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .panel-dot.red { background: #ff4d4d; box-shadow: 0 0 8px rgba(255, 77, 77, 0.4); }
+    .panel-dot.green { background: var(--green); box-shadow: 0 0 8px rgba(26, 158, 63, 0.4); }
+
+    .comparison-divider {
+      width: 1px;
+      height: 80%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0), var(--border), rgba(0,0,0,0));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .comparison-divider::after {
+      content: 'VS';
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel-footer {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      opacity: 0.6;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    /* Refined call bubbles */
+    .call-scene {
+      background: rgba(255, 255, 255, 0.3);
+      padding: 1.5rem;
+      border-radius: 24px;
+      border: 1px solid rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .call-bubble {
@@ -298,6 +369,123 @@
     .avatar.ai {
       background: var(--green-light);
       color: var(--green-dark);
+    }
+
+    /* ---- AI VOICE WIDGET ---- */
+    .voice-widget {
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .voice-visualizer {
+      height: 50px;
+      width: 100%;
+      margin: 1.2rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .wave-bar {
+      width: 3px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 10px;
+      transition: height 0.15s ease;
+    }
+
+    .voice-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.8rem;
+    }
+
+    .ai-avatar-pulse {
+      width: 34px;
+      height: 34px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      position: relative;
+      font-size: 0.7rem;
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    .ai-avatar-pulse.active::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--green);
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: pulse-ring 2s infinite;
+      z-index: -1;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 0.4; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .transcript-container {
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 16px;
+      padding: 1.2rem;
+      min-height: 100px;
+      font-size: 0.88rem;
+      color: var(--black);
+      line-height: 1.6;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    #transcriptText {
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .voice-play-btn {
+      width: 100%;
+      background: var(--black);
+      color: #fff;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 50px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 1.2rem;
+      transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+      font-size: 0.9rem;
+    }
+
+    .voice-play-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .voice-play-btn.playing {
+      background: var(--green);
+    }
+
+    .voice-play-btn svg {
+      width: 18px;
+      height: 18px;
     }
 
     .bubble-msg {
@@ -484,13 +672,15 @@
     .problem-story {
       margin-top: 5rem;
       padding: 3.5rem;
-      background: #0f1a11;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
       border-radius: var(--radius);
-      border: 1px solid #1e3a22;
+      border: 1px solid var(--glass-border);
       display: grid;
       grid-template-columns: 1fr 2fr;
       gap: 3rem;
       align-items: center;
+      box-shadow: var(--shadow-soft);
     }
 
     .story-quote {
@@ -499,12 +689,12 @@
       font-weight: 400;
       font-style: italic;
       line-height: 1.4;
-      color: #d8f0de;
+      color: var(--black);
     }
 
     .story-right p {
       font-size: 0.95rem;
-      color: #8a9e8e;
+      color: var(--text-muted);
       line-height: 1.7;
     }
 
@@ -711,8 +901,8 @@
     /* ---- BEFORE/AFTER ---- */
     .compare {
       padding: 7rem 5%;
-      background: var(--black);
-      color: #fff;
+      background: #fff;
+      color: var(--black);
     }
 
     .compare h2 {
@@ -725,7 +915,7 @@
     }
 
     .compare h2 span {
-      color: var(--green-mid);
+      color: var(--green);
     }
 
     .compare-grid {
@@ -747,21 +937,21 @@
     }
 
     .compare-side.before {
-      background: linear-gradient(145deg, #160808 0%, #0a0404 100%);
-      border: 1px solid #2a1010;
+      background: #fffafa;
+      border: 1px solid #f9ecec;
     }
 
     .compare-side.after {
-      background: linear-gradient(145deg, #091c10 0%, #040d07 100%);
-      border: 1px solid #14321d;
+      background: #f9fffb;
+      border: 1px solid #e9f9ed;
     }
 
     .compare-side.before:hover {
-      box-shadow: 0 20px 40px rgba(229, 85, 85, 0.08);
+      box-shadow: 0 20px 40px rgba(192, 57, 43, 0.05);
     }
 
     .compare-side.after:hover {
-      box-shadow: 0 20px 40px rgba(26, 158, 63, 0.12);
+      box-shadow: 0 20px 40px rgba(26, 158, 63, 0.08);
     }
 
     .compare-label {
@@ -776,11 +966,11 @@
     }
 
     .compare-label.bad {
-      color: #e88;
+      color: #c0392b;
     }
 
     .compare-label.good {
-      color: var(--green-mid);
+      color: var(--green);
     }
 
     .compare-dot {
@@ -790,13 +980,13 @@
     }
 
     .compare-dot.bad {
-      background: #e55;
-      box-shadow: 0 0 10px rgba(238, 85, 85, 0.4);
+      background: #ff4d4d;
+      box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
     }
 
     .compare-dot.good {
       background: var(--green);
-      box-shadow: 0 0 10px rgba(26, 158, 63, 0.4);
+      box-shadow: 0 0 10px rgba(26, 158, 63, 0.2);
     }
 
     .compare-item {
@@ -805,28 +995,28 @@
       gap: 16px;
       margin-bottom: 1.2rem;
       font-size: 0.95rem;
-      color: #b0b8b2;
+      color: #555;
       line-height: 1.6;
       padding: 1rem 1.2rem;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.03);
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.03);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: default;
     }
 
     .compare-side.before .compare-item:hover {
-      background: rgba(229, 85, 85, 0.06);
-      border-color: rgba(229, 85, 85, 0.15);
+      background: rgba(192, 57, 43, 0.05);
+      border-color: rgba(192, 57, 43, 0.1);
       transform: translateX(6px);
-      color: #e8caca;
+      color: #c0392b;
     }
 
     .compare-side.after .compare-item:hover {
-      background: rgba(26, 158, 63, 0.08);
-      border-color: rgba(26, 158, 63, 0.25);
+      background: rgba(26, 158, 63, 0.06);
+      border-color: rgba(26, 158, 63, 0.15);
       transform: translateX(6px);
-      color: #d8f0de;
+      color: var(--green-dark);
     }
 
     .ci-indicator {
@@ -1526,43 +1716,62 @@
 
     <div class="hero-visual">
       <div class="hero-card">
-        <div class="call-scene">
-          <p
-            style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem">
-            Without Boardly</p>
-          <div class="call-bubble">
-            <div class="avatar op">OP</div>
-            <div class="bubble-msg">Sir where are you?? Bus is here!! Come fast!!</div>
+        <!-- WITHOUT BOARDLY -->
+        <div class="comparison-panel">
+          <div class="panel-header">
+            <span class="panel-dot red"></span>
+            Without Boardly
           </div>
-          <div class="call-bubble" style="justify-content:flex-end">
-            <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5">I'm coming, 5 more
-              minutes...</div>
+          <div class="call-scene">
+            <div class="call-bubble">
+              <div class="avatar op">OP</div>
+              <div class="bubble-msg">Where are you?? Bus is here!! Come fast!!</div>
+            </div>
+            <div class="call-bubble" style="justify-content:flex-end">
+              <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5;font-style:italic">I'm coming, 5 more mins...</div>
+            </div>
+            <div class="call-bubble">
+              <div class="avatar op">OP</div>
+              <div class="bubble-msg" style="border-color:#ffcccc;color:#c0392b">NO!! Come NOW!! We are leaving!!</div>
+            </div>
+            <div style="font-size:0.75rem;color:#c0392b;text-align:center;font-weight:500;margin-top:5px">Argument at boarding point 😤</div>
           </div>
-          <div class="call-bubble">
-            <div class="avatar op">OP</div>
-            <div class="bubble-msg" style="border-color:#ffcccc">NO!! Come NOW!! We are leaving!!</div>
-          </div>
-          <div style="font-size:0.78rem;color:#c0392b;margin-top:.5rem;padding-left:42px">😤 Argument at boarding point
-          </div>
+          <div class="panel-footer">Manual Stress</div>
         </div>
-        <div class="ai-scene">
-          <p
-            style="font-size:0.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted)">
-            With Boardly</p>
-          <div class="call-bubble">
-            <div class="avatar ai">AI</div>
-            <div class="bubble-msg ai-msg">Hi Rahul, your bus departs in 30 min. Are you on the way?</div>
+
+        <!-- DIVIDER -->
+        <div class="comparison-divider"></div>
+
+        <!-- WITH BOARDLY -->
+        <div class="comparison-panel">
+          <div class="panel-header">
+            <span class="panel-dot green"></span>
+            With Boardly AI
           </div>
-          <div class="call-bubble" style="justify-content:flex-end">
-            <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5">Yes, heading there.
-              Where is the bus now?</div>
+          
+          <div class="voice-widget" style="margin-top:0">
+            <div class="voice-info">
+              <div class="ai-avatar-pulse" id="voiceAvatar">AI</div>
+              <div>
+                <div style="font-size:0.85rem;font-weight:600">Boardly Dispatch</div>
+                <div style="font-size:0.7rem;color:var(--green);font-weight:500">Live Simulation</div>
+              </div>
+            </div>
+
+            <div class="voice-visualizer" id="waveContainer">
+              <!-- Wave bars will be injected here -->
+            </div>
+
+            <div class="transcript-container" style="min-height: 90px;">
+              <div id="transcriptText" style="transition: opacity 0.3s ease; font-size: 0.82rem;">Click "Listen" to see how Boardly handles a passenger who is running late.</div>
+            </div>
+
+            <button class="voice-play-btn" id="voicePlayBtn" style="padding: 0.7rem;">
+              <svg viewBox="0 0 24 24" fill="currentColor" id="playIcon" style="width:16px;height:16px"><path d="M8 5v14l11-7z"/></svg>
+              <span>Listen to AI Demo</span>
+            </button>
           </div>
-          <div class="call-bubble">
-            <div class="avatar ai">AI</div>
-            <div class="bubble-msg ai-msg">Bus just crossed Silk Board. Arrives in ~8 mins. You're all set!</div>
-          </div>
-          <div style="font-size:0.78rem;color:var(--green);margin-top:.5rem;padding-left:42px">✓ Passenger confirmed ·
-            Operator notified</div>
+          <div class="panel-footer">Autonomous Precision</div>
         </div>
       </div>
     </div>
@@ -2301,6 +2510,82 @@
           });
         }
       );
+
+
+      // ---- AI VOICE DEMO LOGIC ----
+      const voicePlayBtn = document.getElementById('voicePlayBtn');
+      const waveContainer = document.getElementById('waveContainer');
+      const transcriptText = document.getElementById('transcriptText');
+      const voiceAvatar = document.getElementById('voiceAvatar');
+      const playIcon = document.getElementById('playIcon');
+
+      if (voicePlayBtn && waveContainer) {
+        // Create wave bars
+        for (let i = 0; i < 20; i++) {
+          const bar = document.createElement('div');
+          bar.className = 'wave-bar';
+          waveContainer.appendChild(bar);
+        }
+        const bars = document.querySelectorAll('.wave-bar');
+
+        let isPlaying = false;
+        let waveInterval;
+        const script = [
+          { text: "Calling Rahul (Seat 12A)...", duration: 1500 },
+          { text: "AI: Hi Rahul, this is Boardly from VRL Travels.", duration: 2500 },
+          { text: "AI: Your bus is 10 mins away from your pick-up point.", duration: 3000 },
+          { text: "AI: Should I tell the driver you're arriving shortly?", duration: 2500 },
+          { text: "Rahul: Yes please! I'm just 2 mins away.", duration: 2500 },
+          { text: "AI: Perfect. I've updated the driver's dashboard. See you soon!", duration: 3000 },
+          { text: "Call Ended · Driver Notified Automatically.", duration: 2000 }
+        ];
+
+        function updateWaves() {
+          bars.forEach(bar => {
+            const height = isPlaying ? Math.random() * 35 + 5 : 6;
+            bar.style.height = `${height}px`;
+          });
+        }
+
+        async function startDemo() {
+          if (isPlaying) return;
+          isPlaying = true;
+          voicePlayBtn.classList.add('playing');
+          voiceAvatar.classList.add('active');
+          voicePlayBtn.querySelector('span').textContent = 'Call in Progress...';
+          playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // Pause icon
+
+          waveInterval = setInterval(updateWaves, 150);
+
+          for (const line of script) {
+            if (!isPlaying) break;
+            transcriptText.style.opacity = 0;
+            await new Promise(r => setTimeout(r, 300));
+            transcriptText.textContent = line.text;
+            transcriptText.style.opacity = 1;
+            transcriptText.style.fontStyle = line.text.includes('AI:') ? 'normal' : 'italic';
+            transcriptText.style.color = line.text.includes('AI:') ? 'var(--black)' : 'var(--text-muted)';
+            await new Promise(r => setTimeout(r, line.duration));
+          }
+
+          stopDemo();
+        }
+
+        function stopDemo() {
+          isPlaying = false;
+          clearInterval(waveInterval);
+          voicePlayBtn.classList.remove('playing');
+          voiceAvatar.classList.remove('active');
+          voicePlayBtn.querySelector('span').textContent = 'Replay AI Demo';
+          playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; // Play icon
+          bars.forEach(bar => bar.style.height = '6px');
+        }
+
+        voicePlayBtn.addEventListener('click', () => {
+          if (isPlaying) stopDemo();
+          else startDemo();
+        });
+      }
 
     })();
   </script>
