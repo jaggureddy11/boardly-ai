@@ -2530,6 +2530,14 @@
 
         let isPlaying = false;
         let waveInterval;
+        let synth = window.speechSynthesis;
+        let voices = [];
+        const loadVoices = () => { voices = synth.getVoices(); };
+        if (synth && synth.onvoiceschanged !== undefined) {
+          synth.onvoiceschanged = loadVoices;
+        }
+        if (synth) loadVoices();
+
         const script = [
           { text: "Calling Rahul (Seat 12A)...", duration: 1500 },
           { text: "AI: Hi Rahul, this is Boardly from VRL Travels.", duration: 2500 },
@@ -2565,6 +2573,26 @@
             transcriptText.style.opacity = 1;
             transcriptText.style.fontStyle = line.text.includes('AI:') ? 'normal' : 'italic';
             transcriptText.style.color = line.text.includes('AI:') ? 'var(--black)' : 'var(--text-muted)';
+            
+            if (synth && (line.text.includes('AI:') || line.text.includes('Rahul:'))) {
+              synth.cancel(); // Stop previous utterance if any
+              let cleanText = line.text.replace(/^(AI|Rahul):\s*/, '');
+              let utterance = new SpeechSynthesisUtterance(cleanText);
+              
+              if (line.text.includes('AI:')) {
+                let aiVoice = voices.find(v => (v.lang.includes('en-IN') && !v.name.includes('Male')) || v.name.includes('Veena') || v.name.includes('Google English (India)')) || voices.find(v => v.name.includes('Female') || v.name.includes('Samantha'));
+                if (aiVoice) utterance.voice = aiVoice;
+                utterance.pitch = 1.0;
+                utterance.rate = 1.0;
+              } else {
+                let userVoice = voices.find(v => (v.lang.includes('en-IN') && v.name.includes('Male')) || v.name.includes('Rishi')) || voices.find(v => v.name.includes('Male') || v.name.includes('Daniel'));
+                if (userVoice) utterance.voice = userVoice;
+                utterance.pitch = 0.9;
+                utterance.rate = 1.0;
+              }
+              synth.speak(utterance);
+            }
+
             await new Promise(r => setTimeout(r, line.duration));
           }
 
@@ -2574,6 +2602,7 @@
         function stopDemo() {
           isPlaying = false;
           clearInterval(waveInterval);
+          if (synth) synth.cancel();
           voicePlayBtn.classList.remove('playing');
           voiceAvatar.classList.remove('active');
           voicePlayBtn.querySelector('span').textContent = 'Replay AI Demo';
