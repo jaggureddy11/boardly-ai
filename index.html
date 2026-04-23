@@ -2580,12 +2580,12 @@
               let utterance = new SpeechSynthesisUtterance(cleanText);
               
               if (line.text.includes('AI:')) {
-                let aiVoice = voices.find(v => (v.lang.includes('en-IN') && !v.name.includes('Male')) || v.name.includes('Veena') || v.name.includes('Google English (India)')) || voices.find(v => v.name.includes('Female') || v.name.includes('Samantha'));
+                let aiVoice = voices.find(v => v.name.includes('Veena') || v.name.includes('Google UK English Female') || v.name.includes('Google US English') || v.name.includes('Samantha') || v.name.includes('Female'));
                 if (aiVoice) utterance.voice = aiVoice;
                 utterance.pitch = 1.0;
                 utterance.rate = 1.0;
               } else {
-                let userVoice = voices.find(v => (v.lang.includes('en-IN') && v.name.includes('Male')) || v.name.includes('Rishi')) || voices.find(v => v.name.includes('Male') || v.name.includes('Daniel'));
+                let userVoice = voices.find(v => v.name.includes('Male') || v.name.includes('Alex') || v.name.includes('Daniel') || v.name.includes('Google UK English Male'));
                 if (userVoice) utterance.voice = userVoice;
                 utterance.pitch = 0.9;
                 utterance.rate = 1.0;
