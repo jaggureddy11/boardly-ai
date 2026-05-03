@@ -1640,24 +1640,21 @@
       z-index: -2;
       background: #fff;
       overflow: hidden;
-      filter: contrast(18) brightness(1.1); /* Distortion effect container */
     }
 
     .liquid-blob {
       position: absolute;
       width: 45vw;
       height: 45vw;
-      background: var(--green);
-      filter: blur(50px);
       border-radius: 50%;
       animation: drift 25s infinite alternate ease-in-out;
       pointer-events: none;
-      opacity: 0.15;
+      opacity: 0.3;
     }
 
-    .blob-1 { top: -10%; left: -10%; }
-    .blob-2 { bottom: -10%; right: -10%; animation-duration: 35s; animation-delay: -5s; }
-    .blob-3 { top: 40%; left: 30%; background: radial-gradient(circle, rgba(168, 218, 181, 0.12) 0%, rgba(255, 255, 255, 0) 70%); animation-duration: 30s; }
+    .blob-1 { top: -10%; left: -10%; background: radial-gradient(circle, rgba(26, 158, 63, 0.2) 0%, rgba(255, 255, 255, 0) 70%); }
+    .blob-2 { bottom: -10%; right: -10%; background: radial-gradient(circle, rgba(168, 218, 181, 0.3) 0%, rgba(255, 255, 255, 0) 70%); animation-duration: 35s; animation-delay: -5s; }
+    .blob-3 { top: 40%; left: 30%; background: radial-gradient(circle, rgba(13, 92, 36, 0.15) 0%, rgba(255, 255, 255, 0) 70%); animation-duration: 30s; }
 
     @keyframes drift {
       0% { transform: translate(0, 0) scale(1) rotate(0deg); }
@@ -2276,9 +2273,19 @@
         ro.observe(section);
         resize();
 
+        let isVisible = false;
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            isVisible = entry.isIntersecting;
+          });
+        });
+        observer.observe(section);
+
         function animate(time) {
-          ctx.clearRect(0, 0, w, h);
-          if (drawFn) drawFn(ctx, w, h, time, state);
+          if (isVisible) {
+            ctx.clearRect(0, 0, w, h);
+            if (drawFn) drawFn(ctx, w, h, time, state);
+          }
           requestAnimationFrame(animate);
         }
         requestAnimationFrame(animate);
