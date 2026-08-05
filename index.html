@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Boardly — AI Boarding Assistant for Bus Travel</title>
+  <title>Boardly — AI-powered proactive travel companion for train & flight passengers</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500&family=Questrial&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -23,6 +23,7 @@
       --glass-bg: rgba(255, 255, 255, 0.7);
       --glass-border: rgba(255, 255, 255, 0.5);
       --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+      --highlight-bg: #ccff00;
     }
 
     *,
@@ -80,7 +81,7 @@
 
     .nav-logo img {
       width: auto;
-      height: 38px;
+      height: 52px;
     }
 
     .nav-brand {
@@ -172,6 +173,21 @@
       color: var(--black);
       opacity: 0;
       animation: fadeUp 0.9s 0.35s ease forwards;
+    }
+
+    .hero h1 span {
+      display: inline-block;
+      color: var(--green);
+    }
+
+    .highlight {
+      background-color: var(--highlight-bg);
+      color: var(--black) !important;
+      padding: 0 0.2em;
+      border-radius: 4px;
+      display: inline-block;
+      line-height: 1.1;
+      font-style: inherit;
     }
 
     .hero h1 em {
@@ -591,8 +607,8 @@
     /* ---- PROBLEM ---- */
     .problem {
       padding: 7rem 5%;
-      background: var(--black);
-      color: #fff;
+      background: #ffffff;
+      color: var(--black);
       overflow: hidden;
     }
 
@@ -614,11 +630,6 @@
       max-width: 700px;
     }
 
-    .problem h2 span {
-      color: var(--green-mid);
-      font-style: italic;
-    }
-
     .problem-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -627,17 +638,18 @@
     }
 
     .prob-card {
-      background: rgba(22, 31, 24, 0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: #ffffff;
       padding: 2.5rem 2rem;
       transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     }
 
     .prob-card:hover {
-      background: rgba(26, 158, 63, 0.1);
+      background: rgba(26, 158, 63, 0.03);
       transform: translateY(-5px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.05);
+      border-color: var(--green-mid);
     }
 
     .prob-card:first-child {
@@ -665,7 +677,7 @@
 
     .prob-desc {
       font-size: 0.9rem;
-      color: #8a9e8e;
+      color: var(--text-muted);
       line-height: 1.65;
     }
 
@@ -1043,6 +1055,192 @@
       opacity: 1;
     }
 
+    /* ---- SMART ESCALATION (FLOW DIAGRAM) ---- */
+    .interception {
+      padding: 8rem 5%;
+      background: var(--off-white);
+      text-align: center;
+      position: relative;
+    }
+    .interception h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      font-weight: 600;
+      color: var(--black);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+    .interception-sub {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 5rem;
+      line-height: 1.6;
+    }
+    .flow-diagram {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 4rem 2rem;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.03);
+    }
+    .flow-node {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
+      width: 220px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      position: relative;
+      z-index: 2;
+      transition: transform 0.3s ease;
+    }
+    .flow-node:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.04);
+    }
+    .node-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      background: var(--off-white);
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .passenger-node {
+      border-color: rgba(0,0,0,0.1);
+    }
+    .ai-node {
+      border: 2px solid var(--green);
+      box-shadow: 0 0 20px rgba(26,158,63,0.1);
+      transform: scale(1.05);
+    }
+    .ai-node:hover {
+      transform: scale(1.05) translateY(-3px);
+    }
+    .ai-node .node-icon {
+      background: var(--green-light);
+    }
+    .node-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--black);
+      margin-bottom: 0.5rem;
+    }
+    .node-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: var(--green-mid);
+      margin: 0 1.5rem;
+    }
+    .flow-fork {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      position: relative;
+      margin-left: 5rem;
+    }
+    .flow-fork::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 100px;
+      bottom: 100px;
+      width: 2px;
+      background: var(--green-mid);
+      z-index: 1;
+    }
+    .flow-fork::after {
+      content: '';
+      position: absolute;
+      left: -5rem;
+      top: 50%;
+      width: 2.5rem;
+      height: 2px;
+      background: var(--green-mid);
+      z-index: 1;
+    }
+    .flow-branch {
+      position: relative;
+    }
+    .flow-branch::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 50%;
+      width: 2.5rem;
+      height: 2px;
+      background: var(--green-mid);
+      z-index: 1;
+    }
+    .branch-label {
+      position: absolute;
+      top: -1.2rem;
+      left: -1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      background: #ffffff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      border: 1px solid var(--green-light);
+      z-index: 3;
+      white-space: nowrap;
+    }
+    .escalate-branch .branch-label {
+      color: #d93025;
+      border-color: rgba(217, 48, 37, 0.2);
+    }
+    .driver-node {
+      border-color: rgba(217, 48, 37, 0.3);
+    }
+    
+    @media (max-width: 900px) {
+      .flow-diagram {
+        flex-direction: column;
+        padding: 3rem 1.5rem;
+      }
+      .flow-arrow {
+        transform: rotate(90deg);
+        margin: 1.5rem 0;
+      }
+      .flow-fork {
+        margin-left: 0;
+        margin-top: 4rem;
+        width: 100%;
+        align-items: center;
+      }
+      .flow-fork::before, .flow-fork::after, .flow-branch::before {
+        display: none;
+      }
+      .branch-label {
+        position: static;
+        display: inline-block;
+        margin-bottom: 1rem;
+      }
+      .flow-branch {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
     /* ---- FOR WHOM ---- */
     .forwhom {
       padding: 7rem 5%;
@@ -1399,7 +1597,7 @@
 
     .footer-logo img {
       width: auto;
-      height: 38px;
+      height: 52px;
     }
 
     .footer-brand {
@@ -1670,6 +1868,241 @@
       border: 1px solid var(--glass-border);
       box-shadow: var(--shadow-soft);
     }
+
+    /* ---- JOURNEYS (SCALABILITY) ---- */
+    .journeys {
+      padding: 8rem 5%;
+      background: #ffffff;
+      position: relative;
+      color: var(--black);
+    }
+    .journeys h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4rem;
+      color: var(--black);
+    }
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .journey-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+    .journey-card:hover {
+      transform: translateY(-5px);
+      background: #ffffff;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.05);
+      border-color: var(--green-mid);
+    }
+    .jc-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      background: var(--green-light);
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+    .journey-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: var(--black);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .jc-phase {
+      margin-bottom: 1.5rem;
+    }
+    .jc-phase h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--green);
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    .jc-phase ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .jc-phase ul li {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      position: relative;
+      padding-left: 1.2rem;
+      line-height: 1.4;
+    }
+    .jc-phase ul li::before {
+      content: '→';
+      color: var(--green);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+    .jc-outcome {
+      margin-top: auto;
+      background: var(--green-light);
+      padding: 1.2rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: var(--green-dark);
+      line-height: 1.5;
+    }
+    .jc-outcome strong {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--black);
+    }
+    
+    .journey-footer {
+      max-width: 800px;
+      margin: 5rem auto 0;
+      text-align: center;
+      background: #ffffff;
+      padding: 3.5rem;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.03);
+      position: relative;
+      overflow: hidden;
+    }
+    .journey-footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 4px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+    }
+    .journey-footer h3 {
+      font-family: 'Fraunces', serif;
+      font-size: 1.8rem;
+      color: var(--black);
+      margin-bottom: 1.5rem;
+      line-height: 1.3;
+    }
+    .tech-line {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .comparison-line {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--black);
+      display: inline-block;
+      background: var(--highlight-bg);
+      padding: 0.8rem 1.5rem;
+      border-radius: 100px;
+      box-shadow: 0 0 20px rgba(204, 255, 0, 0.2);
+    }
+    @media (max-width: 900px) {
+      .journey-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .equal-fit {
+      padding: 8rem 5%;
+      background: var(--off-white);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .equal-fit::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.06;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .equal-fit > * {
+      position: relative;
+      z-index: 1;
+    }
+    .equal-fit h2 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 3.5rem;
+      color: var(--black);
+    }
+    .equal-ai-text {
+      font-family: 'Century Gothic', 'Questrial', sans-serif;
+      font-weight: 400;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
+    .equal-list {
+      list-style: none;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .equal-list li {
+      background: #ffffff;
+      padding: 1.5rem 2.5rem;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+      position: relative;
+      padding-left: 4rem;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      display: flex;
+      align-items: center;
+    }
+    .equal-list li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(26, 158, 63, 0.08);
+      border-color: var(--green-mid);
+      background: #fff;
+    }
+    .equal-list li::before {
+      content: '';
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a9e3f' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
   </style>
 </head>
 
@@ -1683,31 +2116,29 @@
   <!-- NAV -->
   <nav id="navbar">
     <a href="#" class="nav-logo">
-      <img src="logo.svg" alt="Boardly Logo" />
+      <img src="logo.png" alt="Boardly Logo" />
       <span class="nav-brand">Boardly</span>
     </a>
     <div class="nav-links">
       <a href="#problem">Problem</a>
       <a href="#how">How it works</a>
-      <a href="#features">Features</a>
-      <a href="#waitlist">For operators</a>
+      <a href="#features">Capabilities</a>
+      <a href="#waitlist">For partners</a>
       <a href="#contact">Contact us</a>
     </div>
-    <button class="nav-cta" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Get early
-      access</button>
+    <button class="nav-cta" onclick="document.getElementById('waitlist').scrollIntoView({behavior:'smooth'})">Request demo</button>
   </nav>
 
   <!-- HERO -->
   <section class="hero">
     <div class="hero-tag">
       <span class="hero-tag-dot"></span>
-      AI-powered passenger communication for bus travel
+      AI-powered proactive travel companion for train & flight passengers
     </div>
-    <h1>Stop the panic calls.<br><em>Start smart boarding.</em></h1>
-    <p class="hero-sub">Boardly replaces repeated, stressful operator calls with a calm AI that notifies passengers,
-      listens to their responses, and keeps everyone informed — automatically.</p>
+    <h1>Stop guessing your platform.<br><em>Start knowing your <span class="highlight">journey</span>.</em></h1>
+    <p class="hero-sub">Boardly calls train and flight passengers proactively — before departure and throughout the journey — sharing platform numbers, gate changes, and personalized departure-time advice, in their own language, before they even have to ask.</p>
     <div class="hero-actions">
-      <a href="#waitlist" class="btn-primary">Request early access</a>
+      <a href="#waitlist" class="btn-primary">Request demo</a>
       <a href="#how" class="btn-ghost">See how it works</a>
     </div>
 
@@ -1721,17 +2152,17 @@
           </div>
           <div class="call-scene">
             <div class="call-bubble">
-              <div class="avatar op">OP</div>
-              <div class="bubble-msg">Where are you?? Bus is here!! Come fast!!</div>
+              <div class="avatar op">STATION</div>
+              <div class="bubble-msg">Platform changed to 6. Announcement made once, 4 mins ago.</div>
             </div>
             <div class="call-bubble" style="justify-content:flex-end">
-              <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5;font-style:italic">I'm coming, 5 more mins...</div>
+              <div class="bubble-msg" style="border-radius:12px 4px 12px 12px;background:#f5f5f5;font-style:italic">Wait, what? I'm still at platform 2...</div>
             </div>
             <div class="call-bubble">
-              <div class="avatar op">OP</div>
-              <div class="bubble-msg" style="border-color:#ffcccc;color:#c0392b">NO!! Come NOW!! We are leaving!!</div>
+              <div class="avatar op">STATION</div>
+              <div class="bubble-msg" style="border-color:#ffcccc;color:#c0392b">Train departs in 6 minutes.</div>
             </div>
-            <div style="font-size:0.75rem;color:#c0392b;text-align:center;font-weight:500;margin-top:5px">Argument at boarding point 😤</div>
+            <div style="font-size:0.75rem;color:#c0392b;text-align:center;font-weight:500;margin-top:5px">Missed connections happen like this — every day, at scale.</div>
           </div>
           <div class="panel-footer">Manual Stress</div>
         </div>
@@ -1750,7 +2181,7 @@
             <div class="voice-info">
               <div class="ai-avatar-pulse" id="voiceAvatar">AI</div>
               <div>
-                <div style="font-size:0.85rem;font-weight:600">Boardly Dispatch</div>
+                <div style="font-size:0.85rem;font-weight:600">Boardly Journey Assistant</div>
                 <div style="font-size:0.7rem;color:var(--green);font-weight:500">Live Simulation</div>
               </div>
             </div>
@@ -1760,7 +2191,7 @@
             </div>
 
             <div class="transcript-container" style="min-height: 90px;">
-              <div id="transcriptText" style="transition: opacity 0.3s ease; font-size: 0.82rem;">Click "Listen" to see how Boardly handles a passenger who is running late.</div>
+              <div id="transcriptText" style="transition: opacity 0.3s ease; font-size: 0.82rem;">Click "Listen" to see how Boardly handles a platform change for a train passenger.</div>
             </div>
 
             <button class="voice-play-btn" id="voicePlayBtn" style="padding: 0.7rem;">
@@ -1777,61 +2208,54 @@
   <!-- STATS TICKER -->
   <div class="ticker">
     <div class="ticker-inner">
-      <span><strong>38%</strong> of bus delays involve late boarding</span>
+      <span><strong>23 million</strong> rail passengers travel across India every single day</span>
       <span>✦</span>
-      <span><strong>50+ calls</strong> per operator per departure</span>
+      <span><strong>1.21 lakh</strong> flight passengers were hit by delays in a single month — March 2026, DGCA</span>
       <span>✦</span>
-      <span><strong>₹0</strong> spent on solving this by any major platform</span>
+      <span><strong>₹3.19 crore</strong> spent by airlines on delay facilitation in that one month alone</span>
       <span>✦</span>
-      <span><strong>Zero</strong> apps currently offer AI call interaction for bus travel</span>
+      <span><strong>Zero</strong> platforms in India proactively call passengers across their full train or flight journey</span>
       <span>✦</span>
-      <span><strong>38%</strong> of bus delays involve late boarding</span>
+      <span><strong>23 million</strong> rail passengers travel across India every single day</span>
       <span>✦</span>
-      <span><strong>50+ calls</strong> per operator per departure</span>
+      <span><strong>1.21 lakh</strong> flight passengers were hit by delays in a single month — March 2026, DGCA</span>
       <span>✦</span>
-      <span><strong>₹0</strong> spent on solving this by any major platform</span>
+      <span><strong>₹3.19 crore</strong> spent by airlines on delay facilitation in that one month alone</span>
       <span>✦</span>
-      <span><strong>Zero</strong> apps currently offer AI call interaction for bus travel</span>
+      <span><strong>Zero</strong> platforms in India proactively call passengers across their full train or flight journey</span>
     </div>
   </div>
 
   <!-- PROBLEM -->
   <section class="problem" id="problem">
     <div class="section-eyebrow reveal">The problem</div>
-    <h2 class="reveal">Every departure starts with<span> chaos</span></h2>
+    <h2 class="reveal">Every journey starts with <span class="highlight">guesswork</span></h2>
     <p style="color:#6a8a6e;max-width:580px;margin-top:1rem;font-size:1rem;line-height:1.7"
-      class="reveal reveal-delay-1">Millions of bus trips across India every day. And before every single one, the same
-      broken ritual plays out.</p>
+      class="reveal reveal-delay-1">23 million rail passengers and tens of millions of flyers navigate India's transport network every day. Before almost every trip, the same information gap repeats itself.</p>
 
     <div class="problem-grid" style="margin-top:4rem">
       <div class="prob-card reveal">
         <div class="prob-num">01</div>
-        <div class="prob-title">The operator has to call everyone</div>
-        <div class="prob-desc">One person. 30–50 passengers. Called 2–3 times each. That's over 100 manual calls before
-          a single bus departs — while also managing the route, timing, and vehicle.</div>
+        <div class="prob-title">Platforms change without warning</div>
+        <div class="prob-desc">Train platforms and coach positions change at short notice, and passengers usually only find out by checking a board or asking a stranger — leading to last-minute sprints across crowded stations.</div>
       </div>
       <div class="prob-card reveal reveal-delay-1">
         <div class="prob-num">02</div>
-        <div class="prob-title">Passengers get panic-called</div>
-        <div class="prob-desc">"Come fast, come fast." Every few minutes. No information about where the bus is. Just
-          repeated pressure. Frustrating, dehumanizing — and sometimes leads to real arguments.</div>
+        <div class="prob-title">Passengers misjudge departure timing</div>
+        <div class="prob-desc">Even frequent flyers get flight timing wrong — traffic, security-line length, and gate distance aren't factored into a generic 'arrive 2 hours early' rule, leading to missed flights or wasted waiting time.</div>
       </div>
       <div class="prob-card reveal reveal-delay-2">
         <div class="prob-num">03</div>
-        <div class="prob-title">Apps haven't solved it</div>
-        <div class="prob-desc">RedBus sends an SMS. AbhiBus shows a tracking link. But notifications don't interact.
-          Operators still call manually. The gap is 100% unsolved by every major platform.</div>
+        <div class="prob-title">Existing systems are pull-based, not proactive</div>
+        <div class="prob-desc">IRCTC's Ask Disha is a chatbot passengers have to open and query. NTES shows live status but only if you check it yourself. Airline tools like ASAPP notify you about disruptions, but nothing walks a first-time traveler through the whole journey, start to finish.</div>
       </div>
     </div>
 
     <div class="problem-story reveal" style="margin-top:3rem">
-      <div class="story-quote">"The operator was calling every minute. My father got so irritated, they ended up arguing
-        at the boarding point."</div>
+      <div class="story-quote">"The information passengers need already exists somewhere — NTES, DGCA data, airline systems. Nobody proactively delivers it to the passenger, by voice, in their language, at the moment it matters."</div>
       <div class="story-right">
-        <p>This isn't an edge case. It's the standard experience for hundreds of millions of bus passengers across India
-          every year.</p>
-        <p>The problem isn't laziness or bad intentions. It's a communication gap that no technology has bothered to
-          fill — until now.</p>
+        <p>This is the daily experience for a meaningful share of India's 23 million daily rail passengers and 28+ crore annual domestic air travelers.</p>
+        <p>It's an information-delivery problem that no existing app or chatbot has solved, because all of them wait for the passenger to ask.</p>
         <span class="story-tag">This is exactly what Boardly fixes</span>
       </div>
     </div>
@@ -1840,44 +2264,38 @@
   <!-- HOW IT WORKS -->
   <section class="how" id="how">
     <div class="section-eyebrow reveal" style="text-align:center">How it works</div>
-    <h2 class="reveal">Four steps. Zero manual calls.</h2>
-    <p class="how-sub reveal reveal-delay-1">Boardly runs automatically from the moment a journey is scheduled — no
-      driver input needed.</p>
+    <h2 class="reveal">Four steps. <span class="highlight">Zero missed connections.</span></h2>
+    <p class="how-sub reveal reveal-delay-1">Boardly runs automatically from the moment a ticket is booked — no app-checking needed.</p>
 
     <div class="steps">
       <div class="step reveal">
         <div class="step-num">1</div>
-        <h3>Journey scheduled</h3>
-        <p>Operator creates a trip or imports from their existing platform. Boardly automatically picks up the departure
-          time and passenger list.</p>
+        <h3>Journey linked</h3>
+        <p>Passenger's PNR (train or flight) is linked via booking confirmation — SMS, email forward, or direct IRCTC/airline integration. Boardly picks up journey date, seat/coach, and gate/platform data automatically.</p>
       </div>
       <div class="step reveal reveal-delay-1">
         <div class="step-num">2</div>
-        <h3>AI calls at the right time</h3>
-        <p>30 minutes before departure, Boardly calls each passenger by name. Calm, professional, personalized — in
-          their preferred language.</p>
+        <h3>AI calls at the right moments</h3>
+        <p>T-24 hours: confirms details and answers document/baggage questions. T-3 to T-4 hours: shares expected platform or a personalized 'leave-by' time factoring live traffic and security-queue length.</p>
       </div>
       <div class="step reveal reveal-delay-2">
         <div class="step-num">3</div>
         <h3>Listens and understands</h3>
-        <p>"I'm on my way" → confirmed. "I'll be 10 minutes late" → flagged. "Where's the bus?" → live GPS response.
-          Real conversation, not a robocall.</p>
+        <p>'Which platform is it?' → live answer. 'I'm running late' → flagged and rerouted with fastest-path guidance. Real two-way conversation, not a one-way alert.</p>
       </div>
       <div class="step reveal reveal-delay-3">
         <div class="step-num">4</div>
-        <h3>Operator sees everything</h3>
-        <p>Real-time dashboard shows exactly who's confirmed, delayed, or unreachable — before the operator needs to
-          pick up the phone.</p>
+        <h3>Full journey continuity</h3>
+        <p>One relationship spans booking confirmation through arrival — platform/gate changes, delays, and arrival guidance, all from the same AI, in the passenger's language.</p>
       </div>
     </div>
   </section>
 
   <!-- FEATURES -->
   <section class="features" id="features">
-    <div class="section-eyebrow reveal" style="text-align:center">Features</div>
-    <h2 class="reveal">Not a notification system.<br>A conversation engine.</h2>
-    <p class="features-sub reveal reveal-delay-1">Every feature is designed around one goal: zero manual calls before
-      boarding.</p>
+    <div class="section-eyebrow reveal" style="text-align:center">System capabilities</div>
+    <h2 class="reveal">Not a notification system.<br>A <span class="highlight">conversation engine</span>.</h2>
+    <p class="features-sub reveal reveal-delay-1">Every system capability is designed around one goal: zero missed connections across train and flight travel.</p>
 
     <div class="feat-grid">
       <div class="feat-card reveal">
@@ -1887,10 +2305,9 @@
               d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.79 19.79 0 01-3.07-8.63A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92v2z" />
           </svg>
         </div>
-        <h3>AI outbound calling</h3>
-        <p>Automatically dials every passenger at 30 and 15 minutes before departure. No scheduling, no triggers — fully
-          autonomous.</p>
-        <span class="feat-tag">Core feature</span>
+        <h3>Proactive outbound calling</h3>
+        <p>Automatically calls passengers at defined trigger points (T-24h, T-3/4h, at-station) across the full journey. No manual triggers, fully autonomous.</p>
+        <span class="feat-tag">Core capability</span>
       </div>
       <div class="feat-card reveal reveal-delay-1">
         <div class="feat-icon">
@@ -1900,8 +2317,7 @@
           </svg>
         </div>
         <h3>Intent detection</h3>
-        <p>AI understands what passengers say — "I'm coming", "I'll be late", "cancel my seat" — and takes action
-          accordingly, automatically.</p>
+        <p>Understands what passengers say — 'which platform,' 'I'm running late,' 'has it been cancelled' — and takes the right action automatically.</p>
         <span class="feat-tag">Powered by Groq AI</span>
       </div>
       <div class="feat-card reveal reveal-delay-2">
@@ -1911,9 +2327,8 @@
             <circle cx="12" cy="10" r="3" />
           </svg>
         </div>
-        <h3>Live GPS in voice</h3>
-        <p>"Where is my bus?" → AI fetches real-time location and responds naturally: "Your bus just crossed Silk Board
-          and will arrive in 6 minutes."</p>
+        <h3>Live status + traffic integration</h3>
+        <p>Pulls real-time train running/platform data and flight status, combined with live traffic data, to give a personalized 'leave-by' time — not a generic rule of thumb.</p>
         <span class="feat-tag">Real-time data</span>
       </div>
       <div class="feat-card reveal">
@@ -1923,9 +2338,8 @@
             <path d="M3 9h18M9 21V9" />
           </svg>
         </div>
-        <h3>Operator dashboard</h3>
-        <p>Live view of every passenger's status: confirmed, delayed, unreachable. Updated in real-time as calls happen.
-          No refreshing needed.</p>
+        <h3>Support dashboard</h3>
+        <p>Live view of passenger status across a journey — confirmed, delayed, or needing help — for support teams or operator partners, updated in real time.</p>
         <span class="feat-tag">Real-time sync</span>
       </div>
       <div class="feat-card reveal reveal-delay-1">
@@ -1935,8 +2349,7 @@
           </svg>
         </div>
         <h3>SMS fallback</h3>
-        <p>Call failed? Voicemail? Boardly automatically sends a concise SMS with all boarding details. 100% delivery
-          guarantee.</p>
+        <p>Call not answered? Boardly automatically sends a concise SMS with the same critical details. No passenger left uninformed.</p>
         <span class="feat-tag">Zero missed passengers</span>
       </div>
       <div class="feat-card reveal reveal-delay-2">
@@ -1946,8 +2359,7 @@
           </svg>
         </div>
         <h3>10+ Indian languages</h3>
-        <p>Hindi, Tamil, Telugu, Kannada, Marathi and more. Passenger's language is auto-detected from their booking —
-          no setup required.</p>
+        <p>Hindi, Tamil, Telugu, Kannada, Marathi and more, auto-detected from booking details — critical given India's linguistic diversity and low app/English-literacy segments.</p>
         <span class="feat-tag">India-native</span>
       </div>
     </div>
@@ -1960,41 +2372,69 @@
     <div class="compare-grid">
       <div class="compare-side before reveal">
         <div class="compare-label bad"><span class="compare-dot bad"></span>Without Boardly</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Operator manually calls 30–50 passengers, multiple
-          times each</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Passengers receive panic calls with zero useful
-          information</div>
-        <div class="compare-item"><span class="ci-indicator"></span> No one knows where the bus actually is unless they
-          call
-          the operator</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Delays caused by operators too busy calling to
-          manage
-          the trip</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Conflicts, raised voices, arguments at boarding
-          points
-        </div>
-        <div class="compare-item"><span class="ci-indicator"></span> Zero data on who's coming, who's late, who
-          cancelled
-        </div>
+        <div class="compare-item"><span class="ci-indicator"></span> Passenger finds out about a platform change only by checking a board or asking someone nearby</div>
+        <div class="compare-item"><span class="ci-indicator"></span> No proactive warning before a flight — timing is guesswork based on generic rules</div>
+        <div class="compare-item"><span class="ci-indicator"></span> First-time travelers have no one to explain security, boarding, or platform-finding</div>
+        <div class="compare-item"><span class="ci-indicator"></span> Existing tools (Ask Disha, NTES) require the passenger to open an app and ask</div>
+        <div class="compare-item"><span class="ci-indicator"></span> Disruption alerts, where they exist, are one-off — not part of a continuous relationship</div>
+        <div class="compare-item"><span class="ci-indicator"></span> Zero visibility for support teams into who's confused, delayed, or needs help</div>
       </div>
       <div class="compare-side after reveal reveal-delay-2">
         <div class="compare-label good"><span class="compare-dot good"></span>With Boardly</div>
-        <div class="compare-item"><span class="ci-indicator"></span> AI calls every passenger automatically — operator
-          does
-          nothing</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Passengers receive calm, informative calls with
-          real
-          boarding details</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Live GPS location delivered in natural language,
-          any
-          time</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Operator focuses on driving — dashboard shows
-          status
-          live</div>
-        <div class="compare-item"><span class="ci-indicator"></span> Zero conflict — AI doesn't raise its voice, ever
+        <div class="compare-item"><span class="ci-indicator"></span> AI calls proactively the moment a platform or gate changes — no app-checking required</div>
+        <div class="compare-item"><span class="ci-indicator"></span> Personalized "leave-by" time factoring real traffic and security-queue length</div>
+        <div class="compare-item"><span class="ci-indicator"></span> AI walks first-time travelers through exactly what to expect, in their own language</div>
+        <div class="compare-item"><span class="ci-indicator"></span> One phone call gets a direct spoken answer — no app, no typing, no waiting on hold</div>
+        <div class="compare-item"><span class="ci-indicator"></span> Continuous relationship from booking to arrival, not disconnected one-off alerts</div>
+        <div class="compare-item"><span class="ci-indicator"></span> Support teams get a live dashboard of every passenger's status across the journey</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SMART ESCALATION (INBOUND + OUTBOUND) -->
+  <section class="interception" id="interception">
+    <div class="section-eyebrow reveal">Smart Escalation</div>
+    <h2 class="reveal">We don't replace human support.<br>We <span class="highlight">filter</span> communication.</h2>
+    <p class="interception-sub reveal reveal-delay-1">Boardly handles both outbound and inbound passenger communication. Most journey questions are answered instantly with real-time data. Only complex issues — rebooking, refunds, disputes — get escalated to a human.</p>
+
+    <div class="flow-diagram reveal reveal-delay-2">
+      <!-- Passenger -->
+      <div class="flow-node passenger-node">
+        <div class="node-icon">👤</div>
+        <div class="node-title">Passenger Calls</div>
+        <div class="node-desc">'Which platform?' / 'I think I'm going to miss it.'</div>
+      </div>
+
+      <div class="flow-arrow">▶</div>
+
+      <!-- AI Filter -->
+      <div class="flow-node ai-node">
+        <div class="node-icon">🧠</div>
+        <div class="node-title">Boardly AI</div>
+        <div class="node-desc">Answers routine queries · Checks live status</div>
+      </div>
+
+      <!-- Fork -->
+      <div class="flow-fork">
+        <!-- Branch 1 (Resolved) -->
+        <div class="flow-branch success-branch">
+          <div class="branch-label">Routine Queries</div>
+          <div class="flow-node end-node">
+            <div class="node-icon" style="background:#e8f5ec; color:var(--green)">✓</div>
+            <div class="node-title">Resolved Instantly</div>
+            <div class="node-desc">'Platform 6, coach B4, 8 mins from your location.'</div>
+          </div>
         </div>
-        <div class="compare-item"><span class="ci-indicator"></span> Full audit trail of every call, response, and
-          passenger intent</div>
+
+        <!-- Branch 2 (Escalated) -->
+        <div class="flow-branch escalate-branch">
+          <div class="branch-label">Complex Issues / Refunds</div>
+          <div class="flow-node driver-node">
+            <div class="node-icon" style="background:#fce8e6;">🎧</div>
+            <div class="node-title">Human Support</div>
+            <div class="node-desc">For rebooking, refunds, or complex issues — call transferred seamlessly to a live agent or the railway/airline helpline.</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -2002,57 +2442,129 @@
   <!-- FOR WHOM -->
   <section class="forwhom">
     <div class="section-eyebrow reveal" style="text-align:center">Who it's for</div>
-    <h2 class="reveal">Built for every layer of bus travel</h2>
-    <p class="forwhom-sub reveal reveal-delay-1">Whether you run 5 buses or 5,000, Boardly fits your operation.</p>
+    <h2 class="reveal">Built for <span class="highlight">every layer</span> of train & flight travel</h2>
+    <p class="forwhom-sub reveal reveal-delay-1">Whether you manage regional rail lines or domestic flight networks, Boardly fits your operation.</p>
     <div class="audience-grid">
       <div class="aud-card reveal">
-        <span class="aud-tag">Bus operators</span>
-        <h3>Private & fleet operators</h3>
-        <p>Stop spending 45 minutes before every departure on the phone. Let Boardly handle all passenger communication
-          while you focus on the road.</p>
+        <span class="aud-tag">Railways & aviation ecosystem</span>
+        <h3>Railways, airlines & booking platforms</h3>
+        <p>Reduce support-call load and missed-departure costs with a proactive voice layer that works alongside your existing systems.</p>
         <ul class="aud-list">
-          <li>VRL, SRS, Parveen Travels</li>
-          <li>Private intercity operators</li>
-          <li>Corporate shuttle operators</li>
+          <li>IRCTC / Indian Railways</li>
+          <li>Domestic airlines (IndiGo, Air India, Akasa)</li>
+          <li>OTA/booking platforms (MakeMyTrip, ixigo, Cleartrip)</li>
         </ul>
       </div>
       <div class="aud-card reveal reveal-delay-1">
         <span class="aud-tag">Travel platforms</span>
         <h3>Booking & aggregator platforms</h3>
-        <p>Embed Boardly as a white-labeled feature. Your brand voice. Your caller ID. Give your listed operators a
-          premium communication layer they can't get elsewhere.</p>
+        <p>Embed Boardly as a white-labeled capability — your brand voice, your caller ID. Give travelers a proactive layer no competitor currently offers.</p>
         <ul class="aud-list">
-          <li>RedBus, AbhiBus, Cleartrip</li>
-          <li>State RTC booking portals</li>
-          <li>Travel aggregator platforms</li>
+          <li>Train/flight OTAs and aggregators</li>
+          <li>Airport & station kiosk partners</li>
+          <li>Travel super-apps</li>
         </ul>
       </div>
       <div class="aud-card reveal reveal-delay-2">
         <span class="aud-tag">AI platforms</span>
         <h3>Conversational AI companies</h3>
-        <p>A ready-made vertical for any AI calling platform. Bus travel is one of the highest-frequency use cases in
-          India — and completely unsolved by existing players.</p>
+        <p>A ready-made high-frequency vertical for any voice AI platform. Travel assistance is largely unclaimed territory — most existing voice AI in India is inbound, not proactive outbound.</p>
         <ul class="aud-list">
           <li>Equal AI and similar platforms</li>
-          <li>Enterprise voice AI vendors</li>
-          <li>Travel tech infrastructure</li>
+          <li>Enterprise voice AI vendors (Cognigy, ASAPP-style)</li>
+          <li>Travel-tech infrastructure providers</li>
         </ul>
       </div>
     </div>
   </section>
 
+  <!-- JOURNEYS (SCALABILITY) -->
+  <section class="journeys" id="scalability">
+    <div class="section-eyebrow reveal" style="text-align:center">Infrastructure</div>
+    <h2 class="reveal" style="text-align:center">One AI. Across every <span class="highlight">journey</span>.</h2>
+
+    <div class="journey-grid">
+      <!-- Train -->
+      <div class="journey-card reveal">
+        <div class="jc-icon">🚆</div>
+        <h3>Train Workflow</h3>
+        
+        <div class="jc-phase">
+          <h4>Before arrival at station</h4>
+          <ul>
+            <li>AI notifies platform number, coach position, and boarding-side (engine-end vs. rear) ahead of time</li>
+            <li>Handles queries like "Which platform?" / "Where is coach B2?"</li>
+          </ul>
+        </div>
+        
+        <div class="jc-phase">
+          <h4>During boarding</h4>
+          <ul>
+            <li>Guides late passengers with fastest routes: "Train departs in 6 minutes from platform 3, north bridge is fastest"</li>
+            <li>Reduces reliance on crowded, hard-to-hear station announcements</li>
+          </ul>
+        </div>
+        
+        <div class="jc-outcome">
+          <strong>Outcome:</strong> Reduced missed trains · Less platform confusion at scale
+        </div>
+      </div>
+
+      <!-- Flight -->
+      <div class="journey-card reveal reveal-delay-1">
+        <div class="jc-icon">✈️</div>
+        <h3>Flight Workflow</h3>
+        
+        <div class="jc-phase">
+          <h4>Before check-in / boarding</h4>
+          <ul>
+            <li>AI calls with a personalized leave-by time (traffic + security wait factored in), web check-in reminders, and baggage-limit answers</li>
+          </ul>
+        </div>
+        
+        <div class="jc-phase">
+          <h4>During boarding & real-time</h4>
+          <ul>
+            <li>Answers "Which gate?" / "Has boarding started?" / "How much time do I have?"</li>
+            <li>Delay or gate change → informs instantly via call and SMS fallback</li>
+          </ul>
+        </div>
+        
+        <div class="jc-outcome">
+          <strong>Outcome:</strong> Reduced missed flights · Calmer, better-informed passenger flow
+        </div>
+      </div>
+    </div>
+
+    <div class="journey-footer reveal reveal-delay-3">
+      <h3>Same AI. Two journeys. <span class="highlight">One communication layer</span>.</h3>
+      <p class="tech-line">Both workflows run on the same conversational AI engine — real-time status integration, intent-based responses, and full-journey continuity from booking to arrival.</p>
+      <div class="comparison-line">From reactive apps passengers must check &rarr; to an AI that reaches out before you even ask.</div>
+    </div>
+  </section>
+
+  <!-- EQUAL AI -->
+  <section class="equal-fit">
+    <div class="section-eyebrow reveal" style="text-align:center">Integration</div>
+    <h2 class="reveal">Why this matters for <span class="equal-ai-text">equal ai</span></h2>
+    <ul class="equal-list reveal reveal-delay-1">
+      <li>Outbound, not inbound — a genuine extension of Equal AI's voice-AI thesis into a new direction</li>
+      <li>High-frequency, high-stakes use case: 23M+ daily rail passengers, 28+ crore annual domestic air passengers</li>
+      <li>Structured, predictable conversations (platform, gate, timing) — ideal for reliable AI automation</li>
+      <li>Clear, measurable intent detection and outcomes (missed-connection reduction, support-call deflection)</li>
+      <li>Transactional service call, not cold promotional outreach — favorable under TRAI's TCCCPR compliance framework since it's tied to an existing booking</li>
+      <li>Expandable beyond travel into any proactive, time-sensitive consumer-notification vertical</li>
+    </ul>
+  </section>
+
   <!-- CTA -->
   <section class="cta-section" id="waitlist">
-    <div class="section-eyebrow reveal" style="text-align:center">Early access</div>
-    <h2 class="reveal">Ready to end the <em>panic calls?</em></h2>
-    <p class="reveal reveal-delay-1">Join operators and platforms who are already waiting for Boardly. We're onboarding
-      our first pilot partners now.</p>
-    <div class="waitlist-form reveal reveal-delay-2">
-      <input type="email" id="email-input" placeholder="your@company.com">
-      <button onclick="handleWaitlist()">Join waitlist</button>
+    <div class="section-eyebrow reveal" style="text-align:center">Get Started</div>
+    <h2 class="reveal">Interested in this as a <span class="highlight">vertical</span>?</h2>
+    <p class="reveal reveal-delay-1">Let’s explore how this fits into your AI calling infrastructure.</p>
+    <div class="waitlist-form reveal reveal-delay-2" style="justify-content:center">
+      <button onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Request demo</button>
     </div>
-    <p class="cta-note reveal reveal-delay-3" id="waitlist-note">No credit card. No commitment. First 10 operators get
-      free setup.</p>
   </section>
 
   <!-- CONTACT -->
@@ -2060,9 +2572,8 @@
     <div class="contact-inner reveal">
       <div class="contact-left">
         <div class="section-eyebrow">Contact us</div>
-        <h2>Let's talk about your fleet</h2>
-        <p>Have questions about integration, pricing, or custom deployment? Our team is ready to help you eliminate
-          panic calls for good.</p>
+        <h2>Let's talk about passenger communication</h2>
+        <p>Have questions about integration, API access, or custom deployment? Our team is ready to help you eliminate journey confusion for good.</p>
 
         <div class="contact-info">
           <div class="info-item">
@@ -2080,15 +2591,26 @@
             </div>
           </div>
           <div class="info-item">
-            <span class="info-icon">
+            <a href="https://www.linkedin.com/in/jaggureddy/" target="_blank" class="info-icon">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--green)">
                 <path
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
               </svg>
-            </span>
+            </a>
             <div>
               <span class="info-label">Connect</span>
               <a href="https://www.linkedin.com/in/jaggureddy/" target="_blank" class="info-value">LinkedIn</a>
+            </div>
+          </div>
+          <div class="info-item">
+            <a href="https://github.com/jaggureddy11" target="_blank" class="info-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--green)">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.042-1.416-4.042-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </a>
+            <div>
+              <span class="info-label">Code</span>
+              <a href="https://github.com/jaggureddy11" target="_blank" class="info-value">GitHub</a>
             </div>
           </div>
         </div>
@@ -2127,11 +2649,10 @@
     <div class="footer-top">
       <div>
         <div class="footer-logo">
-          <img src="logo.svg" alt="Boardly Logo" />
+          <img src="logo.png" alt="Boardly Logo" />
           <span class="footer-brand">Boardly</span>
         </div>
-        <p class="footer-tagline" style="margin-top:.75rem">AI passenger notification infrastructure for bus travel. No
-          more panic calls. No more conflicts. Just smooth boarding.</p>
+        <p class="footer-tagline" style="margin-top:.75rem">AI passenger communication infrastructure for train and flight travel. No more guessing platforms. No more missed gates. Just informed, calm journeys.</p>
       </div>
       <div>
         <div class="footer-links">
@@ -2144,7 +2665,7 @@
     </div>
     <hr class="footer-divider">
     <div class="footer-bottom">
-      <p>© 2025 Boardly. All rights reserved.</p>
+      <p>© 2026 Boardly. All rights reserved.</p>
       <p class="footer-made">Made with <span>♥</span> in Bengaluru, India</p>
     </div>
   </footer>
@@ -2178,19 +2699,7 @@
     }, { threshold: 0.3 });
     document.querySelectorAll('.progress-block').forEach(el => progObserver.observe(el));
 
-    // Waitlist
-    function handleWaitlist() {
-      const input = document.getElementById('email-input');
-      const note = document.getElementById('waitlist-note');
-      if (!input.value || !input.value.includes('@')) {
-        input.style.outline = '2px solid #e55';
-        setTimeout(() => input.style.outline = '', 1500);
-        return;
-      }
-      note.textContent = '🎉 You\'re on the list! We\'ll be in touch soon.';
-      note.style.color = 'var(--green)';
-      input.value = '';
-    }
+
 
     // Contact form
     function handleContactSubmit() {
@@ -2291,136 +2800,208 @@
         requestAnimationFrame(animate);
       }
 
-      // 1. HERO - Bus
+      // 1. HERO - Train & Flight Motif
       initCanvas('.hero',
         () => ({}),
         (ctx, w, h, time) => {
-          const duration = 22000;
-          const p = (time % duration) / duration;
-          const bw = 120, bh = 56;
-          // Bus moves from left to right
-          const startX = -bw, endX = w + bw;
-          const x = startX + (endX - startX) * p;
-          const baseY = h - 120; // Road position
-
-          // Buildings
-          ctx.fillStyle = 'rgba(13, 92, 36, 0.04)';
-          ctx.fillRect(w * 0.15, baseY - 140, 90, 140);
-          ctx.fillRect(w * 0.15 + 30, baseY - 160, 40, 20);
-          ctx.fillRect(w * 0.5, baseY - 100, 120, 100);
-          ctx.fillRect(w * 0.75, baseY - 180, 80, 180);
-
-          // Road dashed line
-          ctx.beginPath();
-          ctx.moveTo(0, baseY);
-          ctx.lineTo(w, baseY);
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([15, 15]);
-          // Road lines move left to create speed illusion
-          ctx.lineDashOffset = (time / 20) % 30;
-          ctx.stroke();
-          ctx.setLineDash([]);
-
-          // Bus bobbing
-          const bob = Math.sin(time / 150) * 1.5;
-          const by = baseY - bh - 10 + bob;
+          // --- 1A. FLIGHT SILHOUETTE (Upper Sky) ---
+          const planeDuration = 28000;
+          const pp = (time % planeDuration) / planeDuration;
+          const planeX = -80 + (w + 160) * pp;
+          const planeY = h * 0.16 + Math.sin(time / 2000) * 4;
 
           ctx.save();
-          ctx.translate(x, by);
+          ctx.translate(planeX, planeY);
+          
+          // Vapor trail
+          const trailGrad = ctx.createLinearGradient(-100, 0, 0, 0);
+          trailGrad.addColorStop(0, 'rgba(26, 158, 63, 0)');
+          trailGrad.addColorStop(1, 'rgba(26, 158, 63, 0.12)');
+          ctx.fillStyle = trailGrad;
+          ctx.beginPath();
+          ctx.moveTo(-100, -1);
+          ctx.lineTo(0, -2);
+          ctx.lineTo(0, 2);
+          ctx.lineTo(-100, 1);
+          ctx.fill();
+
+          // Airplane shape (facing right)
+          ctx.fillStyle = 'rgba(26, 158, 63, 0.25)';
+          ctx.beginPath();
+          // Fuselage
+          ctx.ellipse(0, 0, 22, 4, 0, 0, Math.PI * 2);
+          ctx.fill();
+          // Main wing
+          ctx.beginPath();
+          ctx.moveTo(-2, 0);
+          ctx.lineTo(6, -14);
+          ctx.lineTo(12, -14);
+          ctx.lineTo(4, 0);
+          ctx.fill();
+          // Tail fin
+          ctx.beginPath();
+          ctx.moveTo(-16, 0);
+          ctx.lineTo(-20, -9);
+          ctx.lineTo(-15, -9);
+          ctx.lineTo(-11, 0);
+          ctx.fill();
+          ctx.restore();
+
+          // --- 1B. RAILWAY TRACKS ---
+          const baseY = h - 110;
+
+          // Overhead catenary wire
+          ctx.strokeStyle = 'rgba(13, 92, 36, 0.08)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(0, baseY - 65);
+          ctx.lineTo(w, baseY - 65);
+          ctx.stroke();
+
+          // Catenary poles
+          ctx.strokeStyle = 'rgba(13, 92, 36, 0.05)';
+          ctx.lineWidth = 2;
+          for (let px = 60; px < w; px += 220) {
+            ctx.beginPath();
+            ctx.moveTo(px, baseY + 6);
+            ctx.lineTo(px, baseY - 70);
+            ctx.lineTo(px + 15, baseY - 65);
+            ctx.stroke();
+          }
+
+          // Rail ties (Sleepers) moving left for speed illusion
+          const tieOffset = (time / 15) % 20;
+          ctx.strokeStyle = 'rgba(8, 12, 9, 0.08)';
+          ctx.lineWidth = 3;
+          for (let tx = -20 + tieOffset; tx < w + 20; tx += 20) {
+            ctx.beginPath();
+            ctx.moveTo(tx, baseY - 4);
+            ctx.lineTo(tx - 3, baseY + 6);
+            ctx.stroke();
+          }
+
+          // Steel Rails
+          ctx.strokeStyle = 'rgba(26, 158, 63, 0.3)';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, baseY - 3);
+          ctx.lineTo(w, baseY - 3);
+          ctx.moveTo(0, baseY + 4);
+          ctx.lineTo(w, baseY + 4);
+          ctx.stroke();
+
+          // --- 1C. TRAIN SILHOUETTE ---
+          const trainDuration = 18000;
+          const tp = (time % trainDuration) / trainDuration;
+          const tw = 160, th = 44;
+          const startX = -tw, endX = w + tw;
+          const x = startX + (endX - startX) * tp;
+          const bob = Math.sin(time / 120) * 1.0;
+          const ty = baseY - th - 6 + bob;
+
+          ctx.save();
+          ctx.translate(x, ty);
 
           // Drop shadow
           ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
           ctx.beginPath();
-          ctx.ellipse(bw / 2, bh + 8 - bob, bw / 2 - 4, 4, 0, 0, Math.PI * 2);
+          ctx.ellipse(tw / 2, th + 5 - bob, tw / 2 - 6, 4, 0, 0, Math.PI * 2);
           ctx.fill();
 
-          // AC Unit on roof
-          ctx.fillStyle = '#e8f5ec';
+          // Pantograph on roof
+          ctx.strokeStyle = '#0d5c24';
+          ctx.lineWidth = 1.5;
           ctx.beginPath();
-          ctx.roundRect(35, -5, 45, 6, 2);
-          ctx.fill();
+          ctx.moveTo(40, 0);
+          ctx.lineTo(48, -12);
+          ctx.lineTo(62, -12);
+          ctx.lineTo(70, 0);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(44, -12);
+          ctx.lineTo(66, -12);
+          ctx.stroke();
 
-          // Main Body (Front is right side)
+          // Main Aerodynamic Body (facing right)
           ctx.fillStyle = '#1a9e3f'; // Primary green
           ctx.beginPath();
-          ctx.roundRect(0, 0, bw, bh, [4, 12, 12, 4]);
+          ctx.roundRect(0, 0, tw, th, [6, 18, 12, 4]);
           ctx.fill();
 
-          // Bottom dark bumper area
+          // Sleek Aerodynamic Nose highlight
+          ctx.fillStyle = '#148032';
+          ctx.beginPath();
+          ctx.moveTo(tw - 25, 0);
+          ctx.quadraticCurveTo(tw, 10, tw, th - 6);
+          ctx.lineTo(tw - 25, th - 6);
+          ctx.fill();
+
+          // Bottom dark skirt
           ctx.fillStyle = '#080c09';
           ctx.beginPath();
-          ctx.roundRect(0, bh - 6, bw, 6, [0, 0, 12, 4]);
+          ctx.roundRect(0, th - 6, tw, 6, [0, 0, 8, 4]);
           ctx.fill();
 
-          // Front bumper highlight
-          ctx.fillStyle = '#2a2a2a';
-          ctx.beginPath();
-          ctx.roundRect(bw - 10, bh - 6, 8, 4, 2);
-          ctx.fill();
-
-          // Sleek Black Window Band
+          // Continuous Sleek Window Band
           ctx.fillStyle = '#080c09';
           ctx.beginPath();
-          ctx.roundRect(8, 10, bw - 14, 22, [2, 6, 6, 2]);
+          ctx.roundRect(10, 8, tw - 24, 18, [2, 8, 4, 2]);
           ctx.fill();
 
           // Window glass reflections
           ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
           ctx.beginPath();
-          ctx.moveTo(bw - 25, 10);
-          ctx.lineTo(bw - 35, 32);
-          ctx.lineTo(bw - 50, 32);
-          ctx.lineTo(bw - 40, 10);
+          ctx.moveTo(tw - 35, 8);
+          ctx.lineTo(tw - 48, 26);
+          ctx.lineTo(tw - 65, 26);
+          ctx.lineTo(tw - 52, 8);
           ctx.fill();
 
-          // Passenger silhouettes inside window band
-          ctx.fillStyle = 'rgba(26, 158, 63, 0.4)';
-          for (let i = 0; i < 4; i++) {
-            const px = 24 + i * 20;
+          // Passenger silhouettes inside train windows
+          ctx.fillStyle = 'rgba(26, 158, 63, 0.45)';
+          for (let i = 0; i < 5; i++) {
+            const px = 22 + i * 22;
             ctx.beginPath();
-            ctx.arc(px, 20, 3.5, 0, Math.PI * 2); // Head
+            ctx.arc(px, 15, 3, 0, Math.PI * 2); // Head
             ctx.fill();
             ctx.beginPath();
-            ctx.roundRect(px - 5, 25, 10, 7, 2); // Body
+            ctx.roundRect(px - 4.5, 19, 9, 6, 2); // Body
             ctx.fill();
           }
 
-          // Headlight (Right side)
+          // Headlight (Front right nose)
           ctx.fillStyle = '#fff';
           ctx.beginPath();
-          ctx.roundRect(bw - 4, bh - 20, 4, 6, 2);
+          ctx.ellipse(tw - 4, th - 16, 3, 5, 0, 0, Math.PI * 2);
           ctx.fill();
 
           // Headlight beam
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.14)';
           ctx.beginPath();
-          ctx.moveTo(bw, bh - 17);
-          ctx.lineTo(bw + 50, bh - 8);
-          ctx.lineTo(bw + 50, bh - 26);
+          ctx.moveTo(tw, th - 16);
+          ctx.lineTo(tw + 65, th - 4);
+          ctx.lineTo(tw + 65, th - 28);
           ctx.fill();
 
-          // Tail light (Left side)
+          // Tail light (Rear left end)
           ctx.fillStyle = '#ff3b30';
           ctx.beginPath();
-          ctx.roundRect(0, bh - 22, 3, 10, [2, 0, 0, 2]);
+          ctx.roundRect(0, th - 18, 3, 8, [2, 0, 0, 2]);
           ctx.fill();
 
-          // Side mirror (Right side)
-          ctx.fillStyle = '#111';
-          ctx.beginPath();
-          ctx.roundRect(bw - 4, 12, 3, 8, 1);
-          ctx.fill();
-
-          // Wheels
+          // Wheel bogies (train wheels)
           ctx.fillStyle = '#080c09';
-          ctx.beginPath(); ctx.arc(30, bh, 10, 0, Math.PI * 2); ctx.fill();
-          ctx.beginPath(); ctx.arc(bw - 28, bh, 10, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(26, th, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(42, th, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(tw - 46, th, 7, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(tw - 30, th, 7, 0, Math.PI * 2); ctx.fill();
 
           // Wheel rims
           ctx.fillStyle = '#d8e8dc';
-          ctx.beginPath(); ctx.arc(30, bh, 4, 0, Math.PI * 2); ctx.fill();
-          ctx.beginPath(); ctx.arc(bw - 28, bh, 4, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(26, th, 2.5, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(42, th, 2.5, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(tw - 46, th, 2.5, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.arc(tw - 30, th, 2.5, 0, Math.PI * 2); ctx.fill();
 
           ctx.restore();
         }
@@ -2546,13 +3127,13 @@
         if (synth) loadVoices();
 
         const script = [
-          { text: "Calling Rahul (Seat 12A)...", duration: 1500 },
-          { text: "AI: Hi Rahul, this is Boardly from VRL Travels.", duration: 2500 },
-          { text: "AI: Your bus is 10 mins away from your pick-up point.", duration: 3000 },
-          { text: "AI: Should I tell the driver you're arriving shortly?", duration: 2500 },
-          { text: "Rahul: Yes please! I'm just 2 mins away.", duration: 2500 },
-          { text: "AI: Perfect. I've updated the driver's dashboard. See you soon!", duration: 3000 },
-          { text: "Call Ended · Driver Notified Automatically.", duration: 2000 }
+          { text: "Calling Priya (PNR confirmed, Train 12628)...", duration: 1500 },
+          { text: "AI: Hi Priya, quick update on your journey today.", duration: 2200 },
+          { text: "AI: Your train has been moved to Platform 6, not Platform 2.", duration: 3000 },
+          { text: "AI: You're currently 8 minutes away — fastest route is via the north foot-over-bridge.", duration: 3200 },
+          { text: "Priya: Oh no, thank you! Which end is my coach at?", duration: 2500 },
+          { text: "AI: Coach B4 stops near the engine end, at the far side of Platform 6.", duration: 3200 },
+          { text: "Call Ended · Priya boarded with 3 minutes to spare.", duration: 2000 }
         ];
 
         function updateWaves() {
@@ -2581,9 +3162,9 @@
             transcriptText.style.fontStyle = line.text.includes('AI:') ? 'normal' : 'italic';
             transcriptText.style.color = line.text.includes('AI:') ? 'var(--black)' : 'var(--text-muted)';
             
-            if (synth && (line.text.includes('AI:') || line.text.includes('Rahul:'))) {
+            if (synth && (line.text.includes('AI:') || line.text.includes('Priya:'))) {
               synth.cancel(); // Stop previous utterance if any
-              let cleanText = line.text.replace(/^(AI|Rahul):\s*/, '');
+              let cleanText = line.text.replace(/^(AI|Priya):\s*/, '');
               let utterance = new SpeechSynthesisUtterance(cleanText);
               
               if (line.text.includes('AI:')) {
@@ -2592,9 +3173,9 @@
                 utterance.pitch = 1.0;
                 utterance.rate = 1.0;
               } else {
-                let userVoice = voices.find(v => v.name.includes('Male') || v.name.includes('Alex') || v.name.includes('Daniel') || v.name.includes('Google UK English Male'));
+                let userVoice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK English Female') || v.name.includes('Victoria') || v.name.includes('Samantha'));
                 if (userVoice) utterance.voice = userVoice;
-                utterance.pitch = 0.9;
+                utterance.pitch = 1.1;
                 utterance.rate = 1.0;
               }
               synth.speak(utterance);
